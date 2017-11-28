@@ -1,8 +1,5 @@
 import re
-import os
-from var import mem
-import re
-def parse(instr):
+def parse(mem, instr):
     for line in instr:
         try:
             pos = int(re.findall('(0x[0-9]+)', line)[0])

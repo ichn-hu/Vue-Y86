@@ -16,18 +16,25 @@ IRET = 0x9    # Code for ret instruction
 IPUSHL = 0xA  # Code for pushl instruction
 IPOPL = 0xB   # Code for popl instruction
 FNONE = 0x0   # Default function code
+REAX = 0x0    # Register ID for %eax
+RECX = 0x1    # Register ID for %ecx
+REDX = 0x2    # Register ID for %edx
+REBX = 0x3    # Register ID for %ebx
 RESP = 0x4    # Register ID for %esp
+REBP = 0x5    # Register ID for %ebp
+RESI = 0x6    # Register ID for %esi
+REDI = 0x7    # Register ID for %edi
 RNONE = 0xF   # Indicates no register file access
 ALUADD = 0x0  # Function for addition operation
 SAOK = 0x1    # Status code for normal operation
 SADR = 0x2    # Status code for address exception
 SINS = 0x3    # Status code for illegal instruction exception
 SHLT = 0x4    # Status code for halt
+SBUB = 0x5    # Status for bubble
+SSTA = 0x2    # Signal for stall
 
-
-REBP = 0x5    # Register ID for %ebp
 IIADDL = 0xc  # Code for iaddl instruction
 ILEAVE = 0xd  # Code for leave instruction
 
-BUB = 0x1     # Signal for bubble
-STA = 0x2     # Signal for stall
+
+ZERO = "0x00000000"

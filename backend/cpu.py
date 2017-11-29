@@ -2,12 +2,13 @@
 CPU implemention, including all the control logics
 """
 import os
+
+import pipe
 from const import *
-from register import Register
 from memory import Memory
 from misc import split2chunks, swichEndien
-import pipe
-from pipe import F, f, D, d, E, e, M, m, W, w
+from pipe import D, E, F, M, W, d, e, f, m, w
+from register import Register
 
 reg = Register()
 mem = Memory()
@@ -61,9 +62,16 @@ def fetchRun():
     else:
         f.rA, f.rB = RNONE, RNONE
         
-def fetchUpdate():
-    pass
-
+def fetchUpdate():    
+    F.predPC = f.predPC
+    D.valC = f.valC
+    D.valP = f.valP
+    D.rA = f.rA
+    D.rB = f.rB
+    D.icode = f.icode
+    D.ifun = f.ifun
+    D.stat = f.stat
+    
 def decodeRun():
     pass
 def decodeUpdate():

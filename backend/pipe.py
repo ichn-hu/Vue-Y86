@@ -6,13 +6,15 @@ from const import *
 class F:
     def __init__(self):
         F.predPC = ZERO
-        pass
+
 class f:
     def __init__(self):
         f.imem_error = False
         f.instr_valid = True
         f.stat = SAOK
         f.pc = ZERO
+        f.icode = INOP
+        f.ifun = FNONE
 
 
 class D:
@@ -39,6 +41,7 @@ class M:
     def __init__(self):
         M.icode = INOP
         M.valA = ZERO
+        M.Cnd = False
         
 
 class m:
@@ -53,7 +56,7 @@ class W:
 
 class w:
     def __init__(self):
-        pass
+        W.valM = ZERO
 
 STATUS = ()
 

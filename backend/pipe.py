@@ -37,7 +37,8 @@ class e:
 
 class M:
     def __init__(self):
-        pass
+        M.icode = INOP
+        M.valA = ZERO
         
 
 class m:

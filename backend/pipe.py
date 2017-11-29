@@ -3,6 +3,12 @@ This file provides the definition of the pipeline registers
 of all stage.
 """
 from const import *
+class cc:
+    def __init__(self):
+        cc.ZF = 1
+        cc.SF = 0
+        cc.OF = 0
+
 class F:
     def __init__(self):
         F.predPC = ZERO
@@ -19,7 +25,8 @@ class f:
 
 class D:
     def __init__(self):
-        pass
+        D.stat = SAOK
+        D.icode = INOP
         
 
 class d:
@@ -29,30 +36,42 @@ class d:
 
 class E:
     def __init__(self):
-        pass
+        E.stat = SAOK
+        E.icode = INOP
         
 
 class e:
     def __init__(self):
-        pass
+        e.dstE = RNONE
+        e.valE = ZERO
+
         
 
 class M:
     def __init__(self):
         M.icode = INOP
         M.valA = ZERO
+        M.valE = ZERO
         M.Cnd = False
+        M.dstM = RNONE
+        M.dstE = RNONE
+
+
         
 
 class m:
     def __init__(self):
-        pass
+        m.valM = ZERO
+        m.stat = SAOK
         
 
 class W:
     def __init__(self):
-        pass
-
+        W.stat = SAOK
+        W.dstE = ZERO
+        W.dstM = ZERO
+        W.valM = ZERO
+        W.valE = ZERO
 
 class w:
     def __init__(self):
@@ -67,57 +86,3 @@ def init():
 
 if __name__ == "__main__":
     init()
-
-
-"""
-self.mem = mem
-        self.reg = Register()
-        self.F_predPC = ZERO
-        self.f_stat = SAOK
-        self.imem_error = False
-        self.instr_valid = True
-#        self.f_pc
-#        self.f_predPC
-
-        self.D_stat = SAOK
-        self.D_icode = INOP
-        self.D_ifun = FNONE
-        self.D_rA = RNONE
-        self.D_rB = RNONE
-        self.D_valC = ZERO
-        self.D_valP = ZERO
-        self.d_rvalA
-        self.d_srcA
-        self.d_srcB
-
-        self.E_stat
-        self.E_icode
-        self.E_ifun
-        self.E_valC
-        self.E_valA
-        self.E_valB
-        self.E_dstE
-        self.E_dstM
-        self.E_srcA
-        self.E_srcB
-        self.e_Cnd
-        self.e_dstM
-
-        self.M_stat
-        self.M_icode = INOP
-        self.M_Cnd = False
-        self.M_valE = ZERO
-        self.M_valA = ZERO
-        self.M_dstE = RNONE
-        self.M_dstM = RNONE
-        self.m_stat
-        self.dmem_error
-
-        self.W_stat
-        self.W_icode
-        self.W_valE
-        self.W_valM = ZERO
-        self.W_dstE
-        self.W_dstM
-
-"""

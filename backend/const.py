@@ -38,3 +38,7 @@ ILEAVE = 0xd  # Code for leave instruction
 
 
 ZERO = "0x00000000"
+AADD = 0x0
+ASUB = 0x1
+AAND = 0x2
+AXOR = 0x4

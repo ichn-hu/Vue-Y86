@@ -1,4 +1,5 @@
 from misc import split2chunks
+import re
 
 MEMSIZE = 1 << 12
 
@@ -20,6 +21,17 @@ class Memory:
             raise Exception \
             (("Trying to write data from %d to %d"  %  (pos, pos + len(val))))
         self.mem[pos : pos + int(len(val) / 2)] = split2chunks(val, 2)
+    def load(self, instr):
+        for line in instr:
+            line = line[:line.find('|')]
+            if len(line) == 0 or line.isspace():
+                continue
+            try:
+                pos = int(re.findall('(0x[0-9]+)', line)[0])
+                val = int(re.findall('0x[0-9]+:[ ]*([0-9a-fA-F]+)', line)[0])
+                self.write(pos, val)
+            except Exception as e:
+                raise Exception("Parse error in %s" % line) from e
 
 if __name__ == "__main__":
     t_mem = Memory()

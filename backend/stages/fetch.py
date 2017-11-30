@@ -1,11 +1,11 @@
 from const import *
 from .misc import swichEndian, split2chunks, toInteger, int16
 
+
 def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    ret = []
     F.bubble = False
     if (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
-        or IRET in [D.icode, E.icode, M.icode]:
+            or IRET in [D.icode, E.icode, M.icode]:
         F.stall = True
         # load interloak
         # 或者无法预测
@@ -15,11 +15,10 @@ def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     if not F.bubble and not F.stall:
         F.predPC = f.predPC
 
+    return {'stall': F.stall, 'bubble': F.bubble, 'predPC': F.predPC}
 
 
 def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    ret = {}
-
     if M.icode in [IJXX] and not M.Cnd:
         f.pc = M.valA
         # 这里的valA就是IJXX在decode时的valP
@@ -75,16 +74,18 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         f.rA, f.rB = RNONE, RNONE
 
+    ret = {}
     ret['_pc'] = f.pc
     ret['_stat'] = f.stat
     ret['_icode'] = f.icode
     ret['_ifun'] = f.ifun
     ret['_imem_error'] = f.imem_error
     ret['_need_regid'] = f.need_regid
+    ret['_need_valC'] = f.need_valC
     ret['_instr_valid'] = f.instr_valid
     ret['_valP'] = f.valP
     ret['_valC'] = f.valC
     ret['_rA'] = f.rA
     ret['_rB'] = f.rB
+    ret['_predPC'] = f.predPC
     return ret
-

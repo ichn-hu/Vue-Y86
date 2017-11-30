@@ -3,7 +3,6 @@ from .misc import swichEndian, split2chunks
 
 
 def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    
     D.stall = True if E.icode in [IMRMOVL, IPOPL] \
         and E.dstM in [d.srcA, d.srcB] else False
         # load interlock
@@ -28,14 +27,24 @@ def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         D.rA = RNONE
         D.rB = RNONE
 
+    ret = {}
+    ret['stall'] = D.stall
+    ret['bubble'] = D.bubble
+    ret['stat'] = D.stat
+    ret['icode'] = D.icode
+    ret['ifun'] = D.ifun
+    ret['valC'] = D.valC
+    ret['valP'] = D.valP
+    ret['rA'] = D.rA
+    ret['rB'] = D.rB
+    return ret
+
 
 def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     """
     Write or read data from register file, need to deal with 
     data-forwarding. 
     """
-    info = {}
-    info["stageName"] = "decodeRun"
 
     if D.icode in [IRRMOVL, IRMMOVL, IOPL, IPUSHL]:
         d.srcA = D.rA
@@ -103,9 +112,7 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         d.valA = d.rvalA
 
-    info['srcA'] = d.srcA
-    info['srcB'] = d.srcB
-    info['stat'] = D.stat
-
-    return info
+    ret = {
+        '_'
+    }
 

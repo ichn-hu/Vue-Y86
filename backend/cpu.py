@@ -38,17 +38,19 @@ def run():
             'D': {},
             'F': {}
         }
+        
+        info['W'].update(writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['M'].update(memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['E'].update(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['D'].update(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['F'].update(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        
         info['W'].update(writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['M'].update(memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['E'].update(executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['D'].update(decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['F'].update(fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
 
-        info['W'].update(writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['M'].update(memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['E'].update(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['D'].update(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['F'].update(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
 
         info['reg'] = reg.info()
         info['mem'] = mem.info()

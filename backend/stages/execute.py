@@ -2,9 +2,38 @@ from const import *
 from .misc import swichEndian, split2chunks, d2h
 
 
-def debug(*args):
-    print(*args)
-    pass
+def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+
+    E.stall = False
+    E.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
+        or (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
+        else False
+
+    if not E.stall and not E.bubble:
+        E.stat = D.stat
+        E.icode = D.icode
+        E.ifun = D.ifun
+        E.valC = D.valC
+        E.srcA = d.srcA
+        E.srcB = d.srcB
+        E.valA = d.valA
+        E.valB = d.valB
+        E.dstE = d.dstE
+        E.dstM = d.dstM
+    
+    if E.bubble:
+        E.stat = SBUB
+        E.icode = INOP
+        E.ifun = FNONE
+        E.valC = ZERO
+        E.srcA = RNONE
+        E.srcB = RNONE
+        E.valA = ZERO
+        E.valB = ZERO
+        E.dstE = RNONE
+        E.dstM = RNONE
+
+
 
 
 def toBinaryList(val):
@@ -211,28 +240,7 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     info['Cnd'] = e.Cnd
     return info
 
-def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
-    M.stall = False
-    M.bubble = True if m.stat in [SADR, SINS, SHLT] \
-        or w.stat in [SADR, SINS, SHLT] else False
-    #print('stat:', m.stat, w.stat)
-    if not M.stall and not M.bubble:
-        M.stat = E.stat
-        M.ifun = E.ifun
-        M.icode = E.icode
-        M.Cnd = e.Cnd
-        M.valE = e.valE
-        M.valA = E.valA
-        M.dstE = e.dstE
-    if M.bubble:
-        M.stat = SBUB
-        M.ifun = FNONE
-        M.icode = INOP
-        M.Cnd = False
-        M.valE = ZERO
-        M.valA = ZERO
-        M.dstE = FNONE
 
 
 if __name__ == "__main__":

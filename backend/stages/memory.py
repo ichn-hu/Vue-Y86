@@ -2,6 +2,32 @@ from const import *
 from .misc import toInteger
 
 
+def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+
+    M.stall = False
+    M.bubble = True if m.stat in [SADR, SINS, SHLT] \
+        or w.stat in [SADR, SINS, SHLT] else False
+    #print('stat:', m.stat, w.stat)
+    if not M.stall and not M.bubble:
+        M.stat = E.stat
+        M.ifun = E.ifun
+        M.icode = E.icode
+        M.Cnd = e.Cnd
+        M.valE = e.valE
+        M.valA = E.valA
+        M.dstE = e.dstE
+    if M.bubble:
+        M.stat = SBUB
+        M.ifun = FNONE
+        M.icode = INOP
+        M.Cnd = False
+        M.valE = ZERO
+        M.valA = ZERO
+        M.dstE = FNONE
+
+
+
+
 def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     info = {}
     info['stageName'] = 'memoryRun'
@@ -30,24 +56,3 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     info['stat'] = m.stat
     return info
 
-
-def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-
-    W.bubble = False
-    W.stall = True if W.stat in [SADR, SINS, SHLT] else False
-
-    if not W.stall and not W.bubble:
-        W.stat = m.stat
-        W.icode = M.icode
-        W.valE = M.valE
-        W.valM = m.valM
-        W.dstE = M.dstE
-        W.dstM = M.dstM
-    
-    if W.bubble:
-        W.stat = SBUB
-        W.icode = INOP
-        W.valE = ZERO
-        W.valM = ZERO
-        W.dstE = RNONE
-        W.dstM = RNONE

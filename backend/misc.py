@@ -10,6 +10,17 @@ def swichEndian(s):
     return ''.join(reversed(split2chunks(s, 2)))
 
 def toHex(val):
+    """
+    Turn int val to string in hex
+    """
+    digits = []
+    tmp = val
+    while tmp != 0:
+        digits.append(tmp % 2)
+        tmp //= 2
+    if len(digits) < 32:
+        digits = digits + [0] * (32 - len(digits))
+
     if val >= 0:
         s = hex(val)
         s = s[2:]
@@ -17,9 +28,18 @@ def toHex(val):
             s = s[-8:]
         s = "0" * (8 - len(s)) + s
     else:
-        pass
+        val = ~val + 1
+        s = hex(val)
     return s
 
+def aluAdd(a, b, c, cc):
+    pass
+def aluSub(a, b, c, cc):
+    pass
+def aluAnd(a, b, c, cc):
+    pass
+def aluXor(a, b, c, cc):
+    pass
 
 
 def d2h(d):

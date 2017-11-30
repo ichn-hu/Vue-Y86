@@ -7,7 +7,7 @@ import pipe
 from const import *
 from memory import Memory
 from misc import split2chunks, swichEndian
-from pipe import D, E, F, M, W, d, e, f, m, w, cc
+from pipe import D, E, F, M, W, d, e, f, m, w, cc, aluAdd, aluSub, aluXor, aluAnd
 from register import Register
 
 reg = Register()
@@ -173,11 +173,15 @@ def excuteRun():
     else:
         e.aluFun = AADD
 
-    e.aluA = int(swichEndian(e.valA), 16)
-    e.aluB = int(swichEndian(e.valB), 16)
+    e.aluA = swichEndian(e.valA)
+    e.aluB = swichEndian(e.valB)
+
+    e.set_cc = E.icode in (IOPL, IIADDL) and \
+               m.stat not in (SADR, SINS, SHLT) and \
+               W.stat not in (SADR, SINS, SHLT)
 
     if e.aluFun == AADD:
-        e.aluRes = e.aluA + e.aluB
+        e.aluRes = aluAdd(e.aluA, e.aluB, e.set_cc, cc)
     elif e.aluFun == ASUB:
         e.aluRes = e.aluA - e.aluB
     elif e.aluFun == AAND:
@@ -185,10 +189,7 @@ def excuteRun():
     else:
         e.aluRes = e.aluA ^ e.aluB
     
-    e.set_cc = E.icode in (IOPL, IIADDL) and \
-               m.stat not in (SADR, SINS, SHLT) and \
-               W.stat not in (SADR, SINS, SHLT)
-
+    
     
     # TODO: correct errors below
     if e.set_cc:

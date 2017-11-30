@@ -1,4 +1,4 @@
-from const import *
+from stages.const import *
 from stages.misc import swichEndian
 class Register:
     def __init__(self):

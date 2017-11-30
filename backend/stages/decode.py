@@ -27,16 +27,17 @@ def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         D.rA = RNONE
         D.rB = RNONE
 
-    ret = {}
-    ret['stall'] = D.stall
-    ret['bubble'] = D.bubble
-    ret['stat'] = D.stat
-    ret['icode'] = D.icode
-    ret['ifun'] = D.ifun
-    ret['valC'] = D.valC
-    ret['valP'] = D.valP
-    ret['rA'] = D.rA
-    ret['rB'] = D.rB
+    ret = {
+        'stall': D.stall,
+        'bubble': D.bubble,
+        'stat': D.stat,
+        'icode': D.icode,
+        'ifun': D.ifun,
+        'valC': D.valC,
+        'valP': D.valP,
+        'rA': D.rA,
+        'rB': D.rB
+    }
     return ret
 
 
@@ -113,6 +114,12 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         d.valA = d.rvalA
 
     ret = {
-        '_'
+        '_srcA': d.srcA,
+        '_srcB': d.srcB,
+        '_valA': d.valA,
+        '_valB': d.valB,
+        '_dstE': d.dstE,
+        '_dstM': d.dstM
     }
+    return ret
 

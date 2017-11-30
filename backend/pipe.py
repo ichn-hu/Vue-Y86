@@ -1,13 +1,12 @@
 """
 所有的流水线寄存器.
 """
-from const import *
+from stages.const import *
 class cc:
     def __init__(self):
         cc.ZF = True
         cc.SF = False
         cc.OF = False
-        cc.Stat = SAOK
 
 class F:
     def __init__(self):
@@ -102,16 +101,13 @@ class W:
 
 class w:
     def __init__(self):
-        w.stat = SAOK
+        w.Stat = SAOK
 
 STATUS = ()
-Stat = SAOK
 
 def init():
     global STATUS
     STATUS = F(), f(), D(), d(), E(), e(), M(), m(), W(), w(), cc()
-    global Stat
-    Stat = SAOK
 
 
 if __name__ == "__main__":

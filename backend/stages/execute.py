@@ -33,7 +33,21 @@ def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         E.dstE = RNONE
         E.dstM = RNONE
 
-
+    ret = {
+        'stall': E.stall,
+        'bubble': E.bubble,
+        'stat': E.stat,
+        'icode': E.icode,
+        'ifun': E.ifun,
+        'valC': E.valC,
+        'srcA': E.srcA,
+        'srcB': E.srcB,
+        'valA': E.valA,
+        'valB': E.valB,
+        'dstE': E.dstE,
+        'dstM': E.dstM
+    }
+    return ret
 
 
 def toBinaryList(val):
@@ -112,7 +126,6 @@ def aluSub(a, b, c, cc):
             s[i] %= 2
 
     res = toSignedInt(s[0:32])
-    debug(valA, valB, res)
     if c:
         cc.ZF = True if s[0:32] == [0] * 32 else False
         cc.SF = True if s[31] == 1 else False
@@ -124,7 +137,6 @@ def aluSub(a, b, c, cc):
         t = 0
         for j in range(0, 4):
             t = t * 2 + s[i + j]
-        debug(t)
         r.append(d2h(t))
     val = ''.join(r)
     return swichEndian(val)
@@ -177,8 +189,6 @@ def aluXor(a, b, c, cc):
 
 
 def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    info = {}
-    info['stageName'] = 'executeRun'
 
     if E.icode in [IRRMOVL, IOPL, ILEAVE]:
         e.valA = E.valA
@@ -236,10 +246,17 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
             e.Cnd = True
 
     e.dstE = RNONE if E.icode in [IRRMOVL] and not e.Cnd else E.dstE
-    info['stat'] = E.stat
-    info['Cnd'] = e.Cnd
-    return info
 
+    ret = {
+        '_valA': e.valA,
+        '_valB': e.valB,
+        '_aluFun': e.aluFun,
+        '_set_cc': e.set_cc,
+        '_valE': e.valE,
+        '_Cnd': e.Cnd,
+        '_dstE': e.dstE
+    }
+    return ret
 
 
 

@@ -5,11 +5,11 @@ import os
 import io
 
 import pipe
-from const import *
 from memory import Memory
 from stages.misc import split2chunks, swichEndian
 from pipe import D, E, F, M, W, d, e, f, m, w, cc
 from register import Register
+from stages.const import *
 from stages.fetch import fetchRun, fetchUpdate
 from stages.memory import memoryRun, memoryUpdate
 from stages.decode import decodeRun, decodeUpdate
@@ -30,13 +30,17 @@ MAXCLOCK = 50
 
 def run():
     clock = 0
-    while cc.Stat in [SAOK]:
+    while w.Stat in [SAOK]:
+        clock += 1
+        if clock > MAXCLOCK:
+            break
         info = {
             'W': {},
             'M': {},
             'E': {},
             'D': {},
-            'F': {}
+            'F': {},
+            'cyc': clock
         }
         
         info['W'].update(writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
@@ -51,14 +55,8 @@ def run():
         info['D'].update(decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['F'].update(fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
 
-
         info['reg'] = reg.info()
         info['mem'] = mem.info()
-
-        clock += 1
-        print(W.stat, clock)
-        if clock == MAXCLOCK:
-            break
 
 
 if __name__ == "__main__":

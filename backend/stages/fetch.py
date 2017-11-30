@@ -74,18 +74,19 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         f.rA, f.rB = RNONE, RNONE
 
-    ret = {}
-    ret['_pc'] = f.pc
-    ret['_stat'] = f.stat
-    ret['_icode'] = f.icode
-    ret['_ifun'] = f.ifun
-    ret['_imem_error'] = f.imem_error
-    ret['_need_regid'] = f.need_regid
-    ret['_need_valC'] = f.need_valC
-    ret['_instr_valid'] = f.instr_valid
-    ret['_valP'] = f.valP
-    ret['_valC'] = f.valC
-    ret['_rA'] = f.rA
-    ret['_rB'] = f.rB
-    ret['_predPC'] = f.predPC
+    ret = {
+        '_pc': f.pc,
+        '_stat': f.stat,
+        '_icode': f.icode,
+        '_ifun': f.ifun,
+        '_imem_error': f.imem_error,
+        '_need_regid': f.need_regid,
+        '_need_valC': f.need_valC,
+        '_instr_valid': f.instr_valid,
+        '_valP': f.valP,
+        '_valC': f.valC,
+        '_rA': f.rA,
+        '_rB': f.rB,
+        '_predPC': f.predPC
+    }
     return ret

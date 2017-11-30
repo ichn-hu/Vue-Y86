@@ -20,11 +20,23 @@ def writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         W.dstE = RNONE
         W.dstM = RNONE
 
+    ret = {
+        'bubble': W.bubble,
+        'stall': W.stall,
+        'stat': W.stat,
+        'icode': W.icode,
+        'valE': W.valE,
+        'valM': W.valM,
+        'dstE': W.dstE,
+        'dstM': W.dstM
+    }
+    return ret
 
 def writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    cc.Stat = SAOK if W.stat in [SBUB] else W.stat
+    w.Stat = SAOK if W.stat in [SBUB] else W.stat
     if not W.bubble and not W.stall:
         reg.write(W.dstE, W.valE, W.dstM, W.valM)
+    return {'_Stat': w.Stat}
     
 
 

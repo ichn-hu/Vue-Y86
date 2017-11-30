@@ -3,11 +3,9 @@ from .misc import toInteger
 
 
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-
     M.stall = False
     M.bubble = True if m.stat in [SADR, SINS, SHLT] \
         or w.stat in [SADR, SINS, SHLT] else False
-    #print('stat:', m.stat, w.stat)
     if not M.stall and not M.bubble:
         M.stat = E.stat
         M.ifun = E.ifun
@@ -23,15 +21,26 @@ def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         M.Cnd = False
         M.valE = ZERO
         M.valA = ZERO
-        M.dstE = FNONE
+        M.dstE = RNONE
+    
+    ret = {
+        'stall': M.stall,
+        'bubble': M.bubble,
+        'stat': M.stat,
+        'ifun': M.ifun,
+        'icode': M.icode,
+        'Cnd': M.Cnd,
+        'valE': M.valE,
+        'valA': M.valA,
+        'dstE': M.dstE
+    }
+    return ret
+
 
 
 
 
 def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    info = {}
-    info['stageName'] = 'memoryRun'
-
     if M.icode in [IRMMOVL, IPUSHL, ICALL, IMRMOVL]:
         m.mem_addr = M.valE
     elif M.icode in [IPOPL, IRET]:
@@ -53,6 +62,12 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         except:
             m.dmem_error = True
     m.stat = SADR if m.dmem_error else M.stat
-    info['stat'] = m.stat
-    return info
 
+    ret = {
+        '_mem_addr': m.mem_addr,
+        '_mem_read': m.mem_read,
+        '_mem_write': m.mem_write,
+        '_dmem_error': m.dmem_error,
+        '_stat': m.stat
+    }
+    return ret

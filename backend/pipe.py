@@ -12,6 +12,8 @@ class cc:
 class F:
     def __init__(self):
         F.predPC = ZERO                # 预测的PC
+        F.stall = False
+        F.bubble = False
 
 class f:
     def __init__(self):
@@ -36,6 +38,8 @@ class D:
         D.rB = RNONE                   # mem读入
         D.valC = ZERO                  # 同上
         D.valP = ZERO                  # 同上
+        D.stall = False
+        D.bubble = False
         
 
 class d:
@@ -101,7 +105,7 @@ Stat = SAOK
 
 def init():
     global STATUS
-    STATUS = F(), f(), D(), d(), E(), e(), M(), m(), W(), w()
+    STATUS = F(), f(), D(), d(), E(), e(), M(), m(), W(), w(), cc()
     global Stat
     Stat = SAOK
 

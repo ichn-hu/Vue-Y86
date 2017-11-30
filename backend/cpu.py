@@ -33,7 +33,7 @@ MAXCLOCK = 50
 
 def run():
     clock = 0
-    while W.stat in [SAOK]:
+    while cc.Stat in [SAOK]:
         collect(writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         collect(memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         collect(executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))

@@ -1,6 +1,7 @@
 from const import *
 from .misc import toInteger
 
+
 def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     if M.icode in [IRMMOVL, IPUSHL, ICALL, IMRMOVL]:
         m.mem_addr = M.valE
@@ -8,7 +9,7 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         m.mem_addr = M.valA
     else:
         m.mem_addr = None
-    
+
     m.mem_read = True if M.icode in [IMRMOVL, IPOPL, IRET] else False
     m.mem_write = True if M.icode in [IRMMOVL, IPUSHL, ICALL] else False
     m.dmem_error = False
@@ -25,14 +26,24 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     m.stat = SADR if m.dmem_error else M.stat
 
 
-
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
-    M.stall
+    M.stall = False
+    M.bubble = True if m.stat in [SADR, SINS, SHLT] \
+        or w.stat in [SADR, SINS, SHLT] else True
 
-    W.stat = m.stat
-    W.icode = M.icode
-    W.valE = M.valE
-    W.valM = m.valM
-    W.dstE = M.dstE
-    W.dstM = M.dstM
+    if not M.stall and not M.bubble:
+        W.stat = m.stat
+        W.icode = M.icode
+        W.valE = M.valE
+        W.valM = m.valM
+        W.dstE = M.dstE
+        W.dstM = M.dstM
+    
+    if M.bubble:
+        W.stat = SBUB
+        W.icode = INOP
+        W.valE = ZERO
+        W.valM = ZERO
+        W.dstE = RNONE
+        W.dstM = RNONE

@@ -65,6 +65,7 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     info['icode'] = f.icode
     info['ifun'] = f.ifun
     info['stat'] = f.stat
+    info['stall'] = F.stall
     return info
 
 

@@ -1,7 +1,7 @@
 """
 所有的流水线寄存器.
 """
-from stages.const import *
+from const import *
 class cc:
     def __init__(self):
         cc.ZF = True

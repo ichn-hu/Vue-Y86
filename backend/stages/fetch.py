@@ -1,5 +1,5 @@
 from const import *
-from .misc import swichEndian, split2chunks, toInteger, int16
+from misc import swichEndian, split2chunks, toInteger, int16
 
 
 def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):

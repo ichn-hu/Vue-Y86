@@ -1,4 +1,4 @@
-from stages.misc import split2chunks
+from misc import split2chunks
 import re
 
 MEMSIZE = 1 << 12
@@ -41,7 +41,6 @@ class Memory:
                     pos = int(pos_tags[0], 16)
                     if len(val_tags) != 0:
                         val = val_tags[0]
-                        debug(pos, val)
                         self.write(pos, val)
             except Exception as e:
                 raise Exception("Parse error in %s" % line) from e

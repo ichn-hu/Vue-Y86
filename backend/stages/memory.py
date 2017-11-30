@@ -1,11 +1,11 @@
 from const import *
-from .misc import toInteger
+from misc import toInteger
 
 
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     M.stall = False
     M.bubble = True if m.stat in [SADR, SINS, SHLT] \
-        or w.stat in [SADR, SINS, SHLT] else False
+        or w.Stat in [SADR, SINS, SHLT] else False
     if not M.stall and not M.bubble:
         M.stat = E.stat
         M.ifun = E.ifun

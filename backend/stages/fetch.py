@@ -3,8 +3,7 @@ from .misc import swichEndian, split2chunks, toInteger, int16
 
 
 def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    info = {}
-    info['stageName'] = 'fetchRun'
+    ret = {}
 
     if M.icode in [IJXX] and not M.Cnd:
         f.pc = M.valA
@@ -61,16 +60,22 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         f.rA, f.rB = RNONE, RNONE
 
-    info['pc'] = f.pc
-    info['icode'] = f.icode
-    info['ifun'] = f.ifun
-    info['stat'] = f.stat
-    info['stall'] = F.stall
-    return info
+    ret['_pc'] = f.pc
+    ret['_stat'] = f.stat
+    ret['_icode'] = f.icode
+    ret['_ifun'] = f.ifun
+    ret['_imem_error'] = f.imem_error
+    ret['_need_regid'] = f.need_regid
+    ret['_instr_valid'] = f.instr_valid
+    ret['_valP'] = f.valP
+    ret['_valC'] = f.valC
+    ret['_rA'] = f.rA
+    ret['_rB'] = f.rB
+    return ret
 
 
 def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-
+    ret = []
     F.bubble = False
     if (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
         or IRET in [D.icode, E.icode, M.icode]:

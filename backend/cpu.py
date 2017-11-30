@@ -25,28 +25,34 @@ def init(instrCode):
     mem.load(instrCode)
     pipe.init()
 
-def collect(info):
-    if info:
-        print(info)
 
 MAXCLOCK = 50
 
 def run():
     clock = 0
     while cc.Stat in [SAOK]:
-        collect(writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info = {
+            'W': {},
+            'M': {},
+            'E': {},
+            'D': {},
+            'F': {}
+        }
+        info['W'].update(writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['M'].update(memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['E'].update(executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['D'].update(decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['F'].update(fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
 
-        collect(writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        collect(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        
-        reg.show()
+        info['W'].update(writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['M'].update(memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['E'].update(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['D'].update(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        info['F'].update(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+
+        info['reg'] = reg.info()
+        info['mem'] = mem.info()
+
         clock += 1
         print(W.stat, clock)
         if clock == MAXCLOCK:

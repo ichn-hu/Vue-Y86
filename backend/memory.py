@@ -3,9 +3,6 @@ import re
 
 MEMSIZE = 1 << 12
 
-def debug(*args):
-    print(*args)
-    pass
 
 class Memory:
     """
@@ -49,14 +46,13 @@ class Memory:
             except Exception as e:
                 raise Exception("Parse error in %s" % line) from e
 
-    def show(self):
-        pLen = MEMSIZE
-        while pLen >= 4 and (''.join(self.mem[pLen - 4:pLen])) == "00" * 4:
-            pLen -= 4
-        for i in range(0, pLen, 4):
-            for j in range(0, 4):
-                debug(self.mem[i + j], end='\n' if j == 3 else ' ')
-
+    def info(self):
+        ret = {}
+        for i in range(0, MEMSIZE, 4):
+            val = ''.join(self.mem[i:i+4])
+            if val != '00' * 4:
+                ret[i] = val
+        return ret
 
 if __name__ == "__main__":
     t_mem = Memory()

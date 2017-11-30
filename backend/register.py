@@ -1,4 +1,5 @@
 from const import *
+from stages.misc import swichEndian
 class Register:
     def __init__(self):
         self.reg = ["00" * 4] * 8
@@ -20,9 +21,10 @@ class Register:
         if dstM != 0xf:
             self.reg[dstM] = valM
 
-    def show(self):
+    def info(self):
+        ret = {}
         for i in range(0, 8):
-            print(regName[i], self.reg[i])
+            ret[regName[i]] = swichEndian(self.reg[i])
 
 if __name__ == "__main__":
     reg = Register()

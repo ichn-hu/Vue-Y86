@@ -1,49 +1,66 @@
 """
-This file provides the definition of the pipeline registers
-of all stage.
+所有的流水线寄存器.
 """
 from const import *
 class cc:
     def __init__(self):
-        cc.ZF = 1
-        cc.SF = 0
-        cc.OF = 0
+        cc.ZF = True
+        cc.SF = False
+        cc.OF = False
+        cc.Stat = SAOK
 
 class F:
     def __init__(self):
-        F.predPC = ZERO
+        F.predPC = ZERO                # 预测的PC
 
 class f:
     def __init__(self):
         f.imem_error = False
         f.instr_valid = True
         f.stat = SAOK
-        f.pc = ZERO
-        f.icode = INOP
-        f.ifun = FNONE
-
+        f.pc = ZERO                    # 这一步执行的PC
+        f.icode = INOP                 # 由mem读入
+        f.ifun = FNONE                 # 由mem读入
+        f.valP = ZERO                  # 自然下一个PC
+        f.valC = ZERO                  # 读入的常量
+        f.predPC = ZERO                # 预测的PC, update时传给F.predPC
+        f.rA = RNONE                   # 由mem读入
+        f.rB = RNONE                   # 同上
 
 class D:
     def __init__(self):
         D.stat = SAOK
         D.icode = INOP
+        D.ifun = FNONE
+        D.rA = RNONE                   # mem读入
+        D.rB = RNONE                   # mem读入
+        D.valC = ZERO                  # 同上
+        D.valP = ZERO                  # 同上
         
 
 class d:
     def __init__(self):
-        pass
+        d.srcA = RNONE
+        d.srcB = RNONE
+        d.valA = ZERO
+        d.valB = ZERO
+        d.dstE = RNONE
+        d.dstM = RNONE
         
 
 class E:
     def __init__(self):
         E.stat = SAOK
         E.icode = INOP
+        E.ifun = FNONE
+        E.valA = ZERO
         
 
 class e:
     def __init__(self):
         e.dstE = RNONE
         e.valE = ZERO
+        e.Cnd = False
 
         
 
@@ -75,7 +92,7 @@ class W:
 
 class w:
     def __init__(self):
-        W.valM = ZERO
+        w.stat = SAOK
 
 STATUS = ()
 Stat = SAOK

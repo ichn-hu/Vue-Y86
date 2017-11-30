@@ -6,73 +6,82 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     Write or read data from register file, need to deal with 
     data-forwarding. 
     """
-    if D.icode in (IRRMOVL, IRMMOVL, IOPL, IPUSHL):
+    if D.icode in [IRRMOVL, IRMMOVL, IOPL, IPUSHL]:
         d.srcA = D.rA
-    elif D.icode in (IPOPL, IRET):
+    elif D.icode in [IPOPL, IRET]:
         d.srcA = RESP
-    elif D.icode == ILEAVE:
+    elif D.icode in [ILEAVE]:
         d.srcA = REBP
     else:
         d.srcA = RNONE
     
-    if D.icode in (IOPL, IRMMOVL, IMRMOVL, IIADDL):
+    if D.icode in [IOPL, IRMMOVL, IMRMOVL, IIADDL]:
         d.srcB = D.rB
-    elif D.icode in (IPUSHL, IPOPL, ICALL, IRET):
+    elif D.icode in [IPUSHL, IPOPL, ICALL, IRET]:
         d.srcB = RESP
     else:
         d.srcB = RNONE
 
     
-    if D.icode in (IRRMOVL, IIRMOVL, IOPL, IIADDL):
+    if D.icode in [IRRMOVL, IIRMOVL, IOPL, IIADDL]:
         d.dstE = D.rB
-    elif D.icode in (IPUSHL, IPOPL, ICALL, IRET, ILEAVE):
+    elif D.icode in [IPUSHL, IPOPL, ICALL, IRET, ILEAVE]:
         d.dstE = RESP
     else:
         d.dstE = RNONE
 
     
-    if D.icode in (IMRMOVL, IPOPL):
+    if D.icode in [IMRMOVL, IPOPL]:
         d.dstM = D.rA
-    elif D.icode == ILEAVE:
+    elif D.icode in [ILEAVE]:
         d.dstM = REBP
     else:
         d.dstM = RNONE
 
     d.rvalA, d.rvalB = reg.read(d.srcA, d.srcB)
 
-    if D.icode in (ICALL, IJXX):
+    if D.icode in [ICALL, IJXX]:
         d.valA = D.valP
-    elif d.srcA == e.dstE:
+        # 对于call和jmp, 不需要从寄存器读, 用valA代替valP
+    elif d.srcA in [e.dstE]:
         d.valA = e.valE
-    elif d.srcA == M.dstM:
+        # ALU计算结果. add $eax, $ebx; mov %ebx, %ecx
+    elif d.srcA in [M.dstM]:
         d.valA = m.valM
-    elif d.srcA == M.dstE:
+        # 内存读取结果. mov ($eax), %ebx; mov %ebx, %ecx
+    elif d.srcA in [M.dstE]:
         d.valA = M.valE
-    elif d.srcA == W.dstM:
+        # 上上句是计算. add $eax, $ebx; xor %ecx, %ecx; mov %ebx, %ecx
+    elif d.srcA in [W.dstM]:
         d.valA = W.valM
+        # 上上句是读内存
     elif d.srcA == W.dstE:
         d.valA = W.valE
+        # 上上上句是计算
     else:
         d.valA = d.rvalA
 
-    if d.srcB == e.dstE:
+    if d.srcB in [e.dstE]:
         d.valB = e.valE
-    elif d.srcB == M.dstM:
+    elif d.srcB in [M.dstM]:
         d.valB = m.valM
-    elif d.srcB == M.dstE:
+    elif d.srcB in [M.dstE]:
         d.valB = M.valE
-    elif d.srcB == W.dstM:
+    elif d.srcB in [W.dstM]:
         d.valB = W.valM
-    elif d.srcB == W.dstE:
+    elif d.srcB in [W.dstE]:
         d.valB = W.valE
     else:
         d.valA = d.rvalA
 
 def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    D.stat = f.stat
-    D.icode = f.icode
-    D.ifun = f.ifun
-    D.rA = f.rA
-    D.rB = f.rB
-    D.valC = f.valC
-    D.valP = f.valP
+    E.stat = D.stat
+    E.icode = D.icode
+    E.ifun = D.ifun
+    E.valC = D.valC
+    E.srcA = d.srcA
+    E.srcB = d.srcB
+    E.valA = d.valA
+    E.valB = d.valB
+    E.dstE = d.dstE
+    E.dstM = d.dstM

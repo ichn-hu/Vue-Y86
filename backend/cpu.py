@@ -7,7 +7,7 @@ import pipe
 from const import *
 from memory import Memory
 from misc import split2chunks, swichEndian
-from pipe import D, E, F, M, W, d, e, f, m, w, cc, aluAdd, aluSub, aluXor, aluAnd
+from pipe import D, E, F, M, W, d, e, f, m, w, cc
 from register import Register
 from stages.fetch import fetchRun, fetchUpdate
 from stages.memory import memoryRun, memoryUpdate
@@ -24,8 +24,14 @@ def init(instrCode):
     mem.load(instrCode)
     pipe.init()
 
-def run():
-    while W.stat == SAOK:
+def spread():
+    writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg)
+    memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg)
+    executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg)
+    decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg)
+    fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg)
+ 
+
         
 
 

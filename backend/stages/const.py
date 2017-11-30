@@ -36,8 +36,17 @@ SSTA = 0x2    # Signal for stall
 IIADDL = 0xc  # Code for iaddl instruction
 ILEAVE = 0xd  # Code for leave instruction
 
+CJMP = 0x0
+CJLE = 0x1
+CJL = 0x2
+CJE = 0x3
+CJNE = 0x4
+CJGE = 0x5
+CJG = 0x6
 
-ZERO = "0x00000000"
+ZERO = "00000000"
+FOUR = "04000000"
+NEGFOUR = "fcffffff"
 AADD = 0x0
 ASUB = 0x1
 AAND = 0x2

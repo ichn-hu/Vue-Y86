@@ -13,23 +13,22 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     m.dmem_error = False
     if m.mem_read:
         try:
-            m.valM = mem.read(M.valE, 4)
+            m.valM = mem.read(m.mem_addr, 4)
         except:
             m.dmem_error = True
     if m.mem_write:
         try:
-            mem.write(M.valE, M.valA)
+            mem.write(m.mem_addr, M.valA)
         except:
             m.dmem_error = True
     m.stat = SADR if m.dmem_error else M.stat
 
-    
+
 
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    M.stat = E.stat
-    M.icode = E.icode
-    M.Cnd = e.Cnd
-    M.valE = e.valE
-    M.valA = E.valA
-    M.dstE = e.dstE
-    M.dstM = E.dstM
+    W.stat = m.stat
+    W.icode = M.icode
+    W.valE = M.valE
+    W.valM = m.valM
+    W.dstE = M.dstE
+    W.dstM = M.dstM

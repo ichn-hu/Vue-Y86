@@ -25,6 +25,19 @@ REBP = 0x5    # Register ID for %ebp
 RESI = 0x6    # Register ID for %esi
 REDI = 0x7    # Register ID for %edi
 RNONE = 0xF   # Indicates no register file access
+
+regName = {
+    0: 'eax',
+    1: 'ecx',
+    2: 'edx',
+    3: 'ebx',
+    4: 'esp',
+    5: 'ebp',
+    6: 'esi',
+    7: 'edi',
+    0xf: 'fnone'
+}
+
 ALUADD = 0x0  # Function for addition operation
 SAOK = 0x1    # Status code for normal operation
 SADR = 0x2    # Status code for address exception

@@ -75,15 +75,34 @@ def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     if (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
         or IRET in [D.icode, E.icode, M.icode]:
         F.stall = True
+        # load interloak
+        # 或者无法预测
     else:
         F.stall = False
 
-    if not F.stall and not F.bubble:
+    if not F.bubble and not F.stall:
+        F.predPC = f.predPC
+
+    D.stall = True if E.icode in [IMRMOVL, IPOPL] \
+        and E.dstM in [d.srcA, d.srcB] else False
+        # load interlock
+    D.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
+        or (not (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB])
+            and IRET in [D.icode, E.icode, M.icode]) else False
+        # 分支预测错误
+    if not D.stall and not D.bubble:
         D.stat = f.stat
         D.icode = f.icode
         D.ifun = f.ifun
-        F.predPC = f.predPC
         D.valC = f.valC
         D.valP = f.valP
         D.rA = f.rA
         D.rB = f.rB
+    if D.bubble:
+        D.stat = SBUB
+        D.icode = INOP
+        D.ifun = FNONE
+        D.valC = ZERO
+        D.valP = ZERO
+        D.rA = RNONE
+        D.rB = RNONE

@@ -3,6 +3,9 @@ from .misc import toInteger
 
 
 def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+    info = {}
+    info['stageName'] = 'memoryRun'
+
     if M.icode in [IRMMOVL, IPUSHL, ICALL, IMRMOVL]:
         m.mem_addr = M.valE
     elif M.icode in [IPOPL, IRET]:
@@ -24,15 +27,16 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         except:
             m.dmem_error = True
     m.stat = SADR if m.dmem_error else M.stat
+    info['stat'] = m.stat
+    return info
 
 
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
-    M.stall = False
-    M.bubble = True if m.stat in [SADR, SINS, SHLT] \
-        or w.stat in [SADR, SINS, SHLT] else True
+    W.bubble = False
+    W.stall = True if W.stat in [SADR, SINS, SHLT] else False
 
-    if not M.stall and not M.bubble:
+    if not W.stall and not W.bubble:
         W.stat = m.stat
         W.icode = M.icode
         W.valE = M.valE
@@ -40,7 +44,7 @@ def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         W.dstE = M.dstE
         W.dstM = M.dstM
     
-    if M.bubble:
+    if W.bubble:
         W.stat = SBUB
         W.icode = INOP
         W.valE = ZERO

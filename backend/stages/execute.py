@@ -197,6 +197,7 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         elif E.ifun in [CJL] and (cc.SF ^ cc.OF):
             e.Cnd = True
         elif E.ifun in [CJE] and cc.ZF:
+            print(e.valA, e.valB, e.valE)
             e.Cnd = True
         elif E.ifun in [CJNE] and not cc.ZF:
             e.Cnd = True
@@ -206,18 +207,17 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
             e.Cnd = True
 
     e.dstE = RNONE if E.icode in [IRRMOVL] and not e.Cnd else E.dstE
-
+    info['stat'] = E.stat
     info['Cnd'] = e.Cnd
     return info
 
 def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
-    E.stall = False
-    E.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
-        or (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
-        else False
-
-    if not E.stall and not E.bubble:
+    M.stall = False
+    M.bubble = True if m.stat in [SADR, SINS, SHLT] \
+        or w.stat in [SADR, SINS, SHLT] else False
+    #print('stat:', m.stat, w.stat)
+    if not M.stall and not M.bubble:
         M.stat = E.stat
         M.ifun = E.ifun
         M.icode = E.icode
@@ -225,7 +225,7 @@ def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         M.valE = e.valE
         M.valA = E.valA
         M.dstE = e.dstE
-    if E.bubble:
+    if M.bubble:
         M.stat = SBUB
         M.ifun = FNONE
         M.icode = INOP

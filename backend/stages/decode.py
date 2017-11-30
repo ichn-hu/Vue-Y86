@@ -64,7 +64,7 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         d.valA = d.rvalA
 
     if d.srcB in [e.dstE]:
-        d.valB = e.valE
+        d.valB = e.valE # forward, 
     elif d.srcB in [M.dstM]:
         d.valB = m.valM
     elif d.srcB in [M.dstE]:
@@ -78,21 +78,21 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
     info['srcA'] = d.srcA
     info['srcB'] = d.srcB
+    info['stat'] = D.stat
 
-    # return info
+    return info
 
 
 def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     info = {}
     info['stageName'] = 'decodeUpdate'
 
-    D.stall = True if E.icode in [IMRMOVL, IPOPL] \
-        and E.dstM in [d.srcA, d.srcB] else False
-    D.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
-        or (not (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB])
-            and IRET in [D.icode, E.icode, M.icode]) else False
+    E.stall = False
+    E.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
+        or (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
+        else False
 
-    if not D.stall and not D.bubble:
+    if not E.stall and not E.bubble:
         E.stat = D.stat
         E.icode = D.icode
         E.ifun = D.ifun
@@ -104,7 +104,7 @@ def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         E.dstE = d.dstE
         E.dstM = d.dstM
     
-    if D.bubble:
+    if E.bubble:
         E.stat = SBUB
         E.icode = INOP
         E.ifun = FNONE

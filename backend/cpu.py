@@ -46,6 +46,7 @@ def run():
         collect(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         collect(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         
+        reg.show()
         clock += 1
         print(W.stat, clock)
         if clock == MAXCLOCK:

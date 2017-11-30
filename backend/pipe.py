@@ -60,6 +60,8 @@ class E:
         E.valA = ZERO
         E.dstE = RNONE
         E.dstM = RNONE
+        E.bubble = False
+        E.stall = False
         
 
 class e:
@@ -79,6 +81,8 @@ class M:
         M.Cnd = False
         M.dstM = RNONE
         M.dstE = RNONE
+        M.bubble = False
+        M.stall = False
 
         
 

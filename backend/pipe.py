@@ -49,13 +49,13 @@ class e:
 
 class M:
     def __init__(self):
+        M.stat = SAOK
         M.icode = INOP
         M.valA = ZERO
         M.valE = ZERO
         M.Cnd = False
         M.dstM = RNONE
         M.dstE = RNONE
-
 
         
 
@@ -78,10 +78,13 @@ class w:
         W.valM = ZERO
 
 STATUS = ()
+Stat = SAOK
 
 def init():
     global STATUS
     STATUS = F(), f(), D(), d(), E(), e(), M(), m(), W(), w()
+    global Stat
+    Stat = SAOK
 
 
 if __name__ == "__main__":

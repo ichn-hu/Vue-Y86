@@ -45,14 +45,20 @@ def run():
         collect(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         collect(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         collect(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
+        
         clock += 1
+        print(W.stat, clock)
         if clock == MAXCLOCK:
             break
 
 
 if __name__ == "__main__":
     os.chdir("C:\\Users\\ichne\\Documents\\Vue-Y86\\backend")
-    instrCode = io.StringIO(open("sample.yo", "r").read())
+    c1 = io.StringIO(open("sample.yo", "r").read())
+    c2 = io.StringIO(open("c2.yo", "r").read())
+    c3 = io.StringIO(open("c3.yo", "r").read())
+    c4 = io.StringIO(open("c4.yo", "r").read())
+    instrCode = c1
     init(instrCode)
     #mem.show()
     pipe.init()

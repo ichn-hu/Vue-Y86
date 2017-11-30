@@ -205,13 +205,28 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
 
 def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    M.stat = E.stat
-    M.ifun = E.ifun
-    M.icode = E.icode
-    M.Cnd = e.Cnd
-    M.valE = e.valE
-    M.valA = E.valA
-    M.dstE = e.dstE
+
+    E.stall = False
+    E.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
+        or (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
+        else False
+
+    if not E.stall and not E.bubble:
+        M.stat = E.stat
+        M.ifun = E.ifun
+        M.icode = E.icode
+        M.Cnd = e.Cnd
+        M.valE = e.valE
+        M.valA = E.valA
+        M.dstE = e.dstE
+    if E.bubble:
+        M.stat = SBUB
+        M.ifun = FNONE
+        M.icode = INOP
+        M.Cnd = False
+        M.valE = ZERO
+        M.valA = ZERO
+        M.dstE = FNONE
 
 
 if __name__ == "__main__":

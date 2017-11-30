@@ -14,8 +14,6 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         f.pc = F.predPC
 
-    info['pc'] = f.pc
-
     try:
         f.icode, f.ifun = split2chunks(mem.read(toInteger(f.pc), 1), 1)
         f.icode = int16(f.icode)
@@ -24,9 +22,6 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         f.imem_error = True
         f.icode = INOP
         f.ifun = FNONE
-
-    info['icode'] = f.icode
-    info['ifun'] = f.ifun
 
     f.instr_valid = f.ifun in [INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
                                IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL]
@@ -40,8 +35,8 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         f.stat = SAOK
 
-    f.need_regid = f.icode in [IRRMOVL, IRMMOVL, IMRMOVL,
-                               IIRMOVL, IPUSHL, IPOPL, IIADDL]
+    f.need_regid = f.icode in [IRRMOVL, IOPL, IPUSHL, IPOPL,
+                               IIRMOVL, IRMMOVL, IMRMOVL]
     f.need_valC = f.icode in [IIRMOVL, IRMMOVL, IMRMOVL,
                               IJXX, ICALL, IIADDL]
     f.valP = swichEndian(hex(toInteger(f.pc) + 1
@@ -66,15 +61,28 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         f.rA, f.rB = RNONE, RNONE
 
+    info['pc'] = f.pc
+    info['icode'] = f.icode
+    info['ifun'] = f.ifun
+    info['stat'] = f.stat
     return info
 
 
 def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    D.stat = f.stat
-    D.icode = f.icode
-    D.ifun = f.ifun
-    F.predPC = f.predPC
-    D.valC = f.valC
-    D.valP = f.valP
-    D.rA = f.rA
-    D.rB = f.rB
+
+    F.bubble = False
+    if (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
+        or IRET in [D.icode, E.icode, M.icode]:
+        F.stall = True
+    else:
+        F.stall = False
+
+    if not F.stall and not F.bubble:
+        D.stat = f.stat
+        D.icode = f.icode
+        D.ifun = f.ifun
+        F.predPC = f.predPC
+        D.valC = f.valC
+        D.valP = f.valP
+        D.rA = f.rA
+        D.rB = f.rB

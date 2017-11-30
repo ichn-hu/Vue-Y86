@@ -1,4 +1,5 @@
 from const import *
+from .misc import toInteger
 
 def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     if M.icode in [IRMMOVL, IPUSHL, ICALL, IMRMOVL]:
@@ -13,12 +14,12 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     m.dmem_error = False
     if m.mem_read:
         try:
-            m.valM = mem.read(m.mem_addr, 4)
+            m.valM = mem.read(toInteger(m.mem_addr), 4)
         except:
             m.dmem_error = True
     if m.mem_write:
         try:
-            mem.write(m.mem_addr, M.valA)
+            mem.write(toInteger(m.mem_addr), M.valA)
         except:
             m.dmem_error = True
     m.stat = SADR if m.dmem_error else M.stat
@@ -26,6 +27,9 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
 
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+
+    M.stall
+
     W.stat = m.stat
     W.icode = M.icode
     W.valE = M.valE

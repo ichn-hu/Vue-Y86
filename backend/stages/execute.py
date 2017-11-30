@@ -1,5 +1,5 @@
 from const import *
-from misc import swichEndian, split2chunks, d2h
+from .misc import swichEndian, split2chunks, d2h
 
 
 def debug(*args):

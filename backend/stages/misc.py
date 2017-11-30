@@ -1,6 +1,11 @@
 def split2chunks(s, l):
     return [s[i : i + l] for i in range(0, len(s), l)]
 
+def int16(v):
+    return int(v, 16)
+
+def toInteger(v):
+    return int(swichEndian(v), 16)
 
 def swichEndian(s):
     if s.startswith("0x") or s.startswith("0X"):

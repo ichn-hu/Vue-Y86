@@ -54,6 +54,8 @@ class E:
         E.icode = INOP
         E.ifun = FNONE
         E.valA = ZERO
+        E.dstE = RNONE
+        E.dstM = RNONE
         
 
 class e:

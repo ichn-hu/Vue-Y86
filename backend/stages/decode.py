@@ -1,5 +1,5 @@
 from const import *
-from misc import swichEndian, split2chunks
+from .misc import swichEndian, split2chunks
 
 def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     """

@@ -148,6 +148,9 @@ def aluXor(a, b, c, cc):
 
 
 def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+    info = {}
+    info['stageName'] = 'executeRun'
+
     if E.icode in [IRRMOVL, IOPL, ILEAVE]:
         e.valA = E.valA
     elif E.icode in [IIRMOVL, IRMMOVL, IMRMOVL, IIADDL]:
@@ -185,6 +188,7 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     else:
         e.valE = aluXor(e.valA, e.valB, e.set_cc, cc)
 
+    e.Cnd = False
     if E.icode == IJXX or E.icode == IRRMOVL:
         if E.ifun in [CJMP]:
             e.Cnd = True
@@ -203,6 +207,8 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
     e.dstE = RNONE if E.icode in [IRRMOVL] and not e.Cnd else E.dstE
 
+    info['Cnd'] = e.Cnd
+    return info
 
 def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 

@@ -44,7 +44,7 @@ def run():
         info['E'].update(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['D'].update(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['F'].update(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        
+
         info['W'].update(writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['M'].update(memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
         info['E'].update(executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
@@ -62,7 +62,7 @@ def run():
 
 
 if __name__ == "__main__":
-    os.chdir("C:\\Users\\ichne\\Documents\\Vue-Y86\\backend")
+    os.chdir("C:\\Users\\ichne\\Documents\\Vue-Y86\\backend\\test")
     c1 = io.StringIO(open("sample.yo", "r").read())
     c2 = io.StringIO(open("c2.yo", "r").read())
     c3 = io.StringIO(open("c3.yo", "r").read())

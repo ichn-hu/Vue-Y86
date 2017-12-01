@@ -124,8 +124,8 @@ def aluSub(a, b, c, cc):
     if c:
         cc.ZF = True if s[0:32] == [0] * 32 else False
         cc.SF = True if s[31] == 1 else False
-        cc.OF = True if (valA < 0 and valB > 0 and res > 0) \
-            or (valA > 0 and valB < 0 and res < 0) else False
+        cc.OF = True if (valA < 0 and valB > 0 and res < 0) \
+            or (valA > 0 and valB < 0 and res > 0) else False
     s = list(reversed(s[0:32]))
     r = []
     for i in range(0, 32, 4):
@@ -208,6 +208,8 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         m.stat not in [SADR, SINS, SHLT] and \
         W.stat not in [SADR, SINS, SHLT]
 
+    e.valA = E.valA
+
     if e.aluFun == AADD:
         e.valE = aluAdd(e.aluA, e.aluB, e.set_cc, cc)
         #print('233:', e.aluA, e.aluB, e.valE, cc.ZF)        
@@ -217,10 +219,9 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         e.valE = aluAnd(e.aluA, e.aluB, e.set_cc, cc)
     else:
         e.valE = aluXor(e.aluA, e.aluB, e.set_cc, cc)
-    e.valA = E.valA
 
     e.Cnd = False
-    if E.icode == IJXX or E.icode == IRRMOVL:
+    if E.icode in [IJXX, IRRMOVL]:
         if E.ifun in [CJMP]:
             e.Cnd = True
         elif E.ifun in [CJLE] and ((cc.SF ^ cc.OF) | cc.ZF):
@@ -230,7 +231,7 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         elif E.ifun in [CJE] and cc.ZF:
             e.Cnd = True
         elif E.ifun in [CJNE] and not cc.ZF:
-            print(e.aluA, e.aluB, e.valE, cc.ZF)
+        #    print(e.aluA, e.aluB, e.valE, cc.ZF)
             e.Cnd = True
         elif E.ifun in [CJGE] and not (cc.SF ^ cc.OF):
             e.Cnd = True
@@ -246,7 +247,8 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         '_set_cc': e.set_cc,
         '_valE': e.valE,
         '_Cnd': e.Cnd,
-        '_dstE': e.dstE
+        '_dstE': e.dstE,
+        '_valA': e.valA
     }
     return ret
 

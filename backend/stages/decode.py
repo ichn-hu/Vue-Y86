@@ -3,6 +3,7 @@ from misc import swichEndian, split2chunks
 
 
 def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+
     D.stall = True if E.icode in [IMRMOVL, IPOPL] \
         and E.dstM in [d.srcA, d.srcB] else False
         # load interlock
@@ -10,6 +11,7 @@ def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         or (not (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB])
             and IRET in [D.icode, E.icode, M.icode]) else False
         # 分支预测错误
+
     if not D.stall and not D.bubble:
         D.stat = f.stat
         D.icode = f.icode

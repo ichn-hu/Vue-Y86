@@ -67,6 +67,7 @@ class e:
     def __init__(self):
         e.dstE = RNONE
         e.valE = ZERO
+        e.valA = ZERO
         e.Cnd = False
 
         
@@ -83,8 +84,6 @@ class M:
         M.bubble = False
         M.stall = False
 
-        
-
 class m:
     def __init__(self):
         m.valM = ZERO
@@ -93,6 +92,7 @@ class m:
 
 class W:
     def __init__(self):
+        W.icode = INOP
         W.stat = SAOK
         W.dstE = ZERO
         W.dstM = ZERO

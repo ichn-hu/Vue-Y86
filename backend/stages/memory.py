@@ -3,18 +3,20 @@ from misc import toInteger
 
 
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+        
     M.stall = False
     M.bubble = True if m.stat in [SADR, SINS, SHLT] \
         or W.stat in [SADR, SINS, SHLT] else False
+
     if not M.stall and not M.bubble:
         M.stat = E.stat
         M.ifun = E.ifun
         M.icode = E.icode
         M.Cnd = e.Cnd
         M.valE = e.valE
-        M.valA = E.valA
-        M.dstM = E.dstM
+        M.valA = e.valA
         M.dstE = e.dstE
+        M.dstM = E.dstM
     if M.bubble:
         M.stat = SBUB
         M.ifun = FNONE
@@ -23,6 +25,8 @@ def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         M.valE = ZERO
         M.valA = ZERO
         M.dstE = RNONE
+        M.dstM = RNONE
+
     
     ret = {
         'stall': M.stall,
@@ -33,12 +37,10 @@ def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         'Cnd': M.Cnd,
         'valE': M.valE,
         'valA': M.valA,
-        'dstE': M.dstE
+        'dstE': M.dstE,
+        'dstM': M.dstM
     }
     return ret
-
-
-
 
 
 def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
@@ -62,8 +64,8 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
             mem.write(toInteger(m.mem_addr), M.valA)
         except:
             m.dmem_error = True
-    if M.icode in [IMRMOVL]:
-        print(m.valM, regName[M.dstM])
+    #if M.icode in [IMRMOVL]:
+    #    print(m.valM, regName[M.dstM])
 
     m.stat = SADR if m.dmem_error else M.stat
 

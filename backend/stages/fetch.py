@@ -3,8 +3,6 @@ from misc import swichEndian, split2chunks, toInteger, int16
 
 
 def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    if not F.bubble and not F.stall:
-        F.predPC = f.predPC
     F.bubble = False
     if (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
             or IRET in [D.icode, E.icode, M.icode]:
@@ -13,6 +11,10 @@ def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         # 或者无法预测
     else:
         F.stall = False
+
+    if not F.bubble and not F.stall:
+        F.predPC = f.predPC
+
     return {'stall': F.stall, 'bubble': F.bubble, 'predPC': F.predPC}
 
 
@@ -20,7 +22,8 @@ def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     if M.icode in [IJXX] and not M.Cnd:
         f.pc = M.valA
         # 这里的valA就是IJXX在decode时的valP
-    elif M.icode in [IRET]:
+    elif W.icode in [IRET]:
+        print( W.valM)
         f.pc = W.valM
     else:
         f.pc = F.predPC

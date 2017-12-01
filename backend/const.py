@@ -3,8 +3,8 @@
 这些值将出现在pipeline register中. 具体定义参见csapp2e, Figure 4.26 Constant values used in HCL descriptions.
 此外, 补充定义IIADDL, ILEAVE, REBP, 以提供对指令iaddl和leave的支持.
 """
-IHALT = 0x0   # Code for halt instruction
-INOP = 0x1    # Code for nop instruction
+INOP = 0x0    # Code for nop instruction
+IHALT = 0x1   # Code for halt instruction
 IRRMOVL = 0x2  # Code for rrmovl instruction
 IIRMOVL = 0x3  # Code for irmovl instruction
 IRMMOVL = 0x4  # Code for rmmovl instruction

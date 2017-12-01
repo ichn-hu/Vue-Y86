@@ -9,7 +9,7 @@ if __name__ == "__main__":
     c2 = io.StringIO(open("c2.yo", "r").read())
     c3 = io.StringIO(open("c3.yo", "r").read())
     c4 = io.StringIO(open("c4.yo", "r").read())
-    instrCode = c1
+    instrCode = c4
     cpu.init(instrCode)
     cpu.pipe.init()
     res = cpu.run()

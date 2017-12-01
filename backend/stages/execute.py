@@ -1,5 +1,5 @@
 from const import *
-from misc import swichEndian, split2chunks, d2h
+from misc import swichEndian, split2chunks, d2h, toInteger
 
 
 def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
@@ -79,10 +79,8 @@ def toSignedInt(bits):
 
 
 def aluAdd(a, b, c, cc):
-    a = swichEndian(a)
-    b = swichEndian(b)
-    a = toBinaryList(int(a, 16))
-    b = toBinaryList(int(b, 16))
+    a = toBinaryList(toInteger(a))
+    b = toBinaryList(toInteger(b))
     valA = toSignedInt(a)
     valB = toSignedInt(b)
     s = [0] * 33
@@ -91,7 +89,6 @@ def aluAdd(a, b, c, cc):
         if s[i] > 1:
             s[i + 1] = 1
             s[i] %= 2
-
     res = toSignedInt(s[0:32])
     if c:
         cc.ZF = True if s[0:32] == [0] * 32 else False
@@ -110,10 +107,8 @@ def aluAdd(a, b, c, cc):
 
 
 def aluSub(a, b, c, cc):
-    a = swichEndian(a)
-    b = swichEndian(b)
-    a = toBinaryList(int(a, 16))
-    b = toBinaryList(int(b, 16))
+    a = toBinaryList(toInteger(a))
+    b = toBinaryList(toInteger(b))
     valA = toSignedInt(a)
     valB = toSignedInt(b)
     b = list(map(lambda x: 0 if x == 1 else 1, b))
@@ -143,10 +138,8 @@ def aluSub(a, b, c, cc):
 
 
 def aluAnd(a, b, c, cc):
-    a = swichEndian(a)
-    b = swichEndian(b)
-    a = toBinaryList(int(a, 16))
-    b = toBinaryList(int(b, 16))
+    a = toBinaryList(toInteger(a))
+    b = toBinaryList(toInteger(b))
     s = [0] * 32
     for i in range(0, 32):
         s[i] = a[i] & b[i]
@@ -166,10 +159,8 @@ def aluAnd(a, b, c, cc):
 
 
 def aluXor(a, b, c, cc):
-    a = swichEndian(a)
-    b = swichEndian(b)
-    a = toBinaryList(int(a, 16))
-    b = toBinaryList(int(b, 16))
+    a = toBinaryList(toInteger(a))
+    b = toBinaryList(toInteger(b))
     s = [0] * 32
     for i in range(0, 32):
         s[i] = a[i] ^ b[i]
@@ -189,25 +180,24 @@ def aluXor(a, b, c, cc):
 
 
 def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-
     if E.icode in [IRRMOVL, IOPL, ILEAVE]:
-        e.valA = E.valA
+        e.aluA = E.valA
     elif E.icode in [IIRMOVL, IRMMOVL, IMRMOVL, IIADDL]:
-        e.valA = E.valC
+        e.aluA = E.valC
     elif E.icode in [ICALL, IPUSHL]:
-        e.valA = NEGFOUR
+        e.aluA = NEGFOUR
     elif E.icode in [IRET, IPOPL]:
-        e.valA = FOUR
+        e.aluA = FOUR
     else:
-        e.valA = ZERO
+        e.aluA = ZERO
 
     if E.icode in [IRMMOVL, IMRMOVL, IOPL, ICALL,
                    IPUSHL, IRET, IPOPL, IIADDL]:
-        e.valB = E.valB
+        e.aluB = E.valB
     elif E.icode in [ILEAVE]:
-        e.valB = FOUR
+        e.aluB = FOUR
     else:
-        e.valB = ZERO
+        e.aluB = ZERO
 
     if E.icode in [IOPL]:
         e.aluFun = int(E.ifun)
@@ -219,13 +209,15 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         W.stat not in [SADR, SINS, SHLT]
 
     if e.aluFun == AADD:
-        e.valE = aluAdd(e.valA, e.valB, e.set_cc, cc)
+        e.valE = aluAdd(e.aluA, e.aluB, e.set_cc, cc)
+        #print('233:', e.aluA, e.aluB, e.valE, cc.ZF)        
     elif e.aluFun == ASUB:
-        e.valE = aluSub(e.valA, e.valB, e.set_cc, cc)
+        e.valE = aluSub(e.aluA, e.aluB, e.set_cc, cc)
     elif e.aluFun == AAND:
-        e.valE = aluAnd(e.valA, e.valB, e.set_cc, cc)
+        e.valE = aluAnd(e.aluA, e.aluB, e.set_cc, cc)
     else:
-        e.valE = aluXor(e.valA, e.valB, e.set_cc, cc)
+        e.valE = aluXor(e.aluA, e.aluB, e.set_cc, cc)
+    e.valA = E.valA
 
     e.Cnd = False
     if E.icode == IJXX or E.icode == IRRMOVL:
@@ -238,6 +230,7 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         elif E.ifun in [CJE] and cc.ZF:
             e.Cnd = True
         elif E.ifun in [CJNE] and not cc.ZF:
+            print(e.aluA, e.aluB, e.valE, cc.ZF)
             e.Cnd = True
         elif E.ifun in [CJGE] and not (cc.SF ^ cc.OF):
             e.Cnd = True
@@ -247,8 +240,8 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     e.dstE = RNONE if E.icode in [IRRMOVL] and not e.Cnd else E.dstE
 
     ret = {
-        '_valA': e.valA,
-        '_valB': e.valB,
+        '_aluA': e.aluA,
+        '_aluB': e.aluB,
         '_aluFun': e.aluFun,
         '_set_cc': e.set_cc,
         '_valE': e.valE,
@@ -262,9 +255,8 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 if __name__ == "__main__":
     class cc:
         pass
-    print(aluAnd("01000000", "01000000", True, cc))
+    a = "ffffffff"
+    b = "ffffffff"
+    print(aluSub(a, b, True, cc))
     print(cc.ZF, cc.SF, cc.OF)
-    print(aluXor("01000000", "0f000000", True, cc))
-    print(cc.ZF, cc.SF, cc.OF)
-    print(aluXor("ffffff7f", "ffffffff", True, cc))
-    print(cc.ZF, cc.SF, cc.OF)
+    print(a, b)

@@ -5,7 +5,7 @@ from misc import toInteger
 def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     M.stall = False
     M.bubble = True if m.stat in [SADR, SINS, SHLT] \
-        or w.Stat in [SADR, SINS, SHLT] else False
+        or W.stat in [SADR, SINS, SHLT] else False
     if not M.stall and not M.bubble:
         M.stat = E.stat
         M.ifun = E.ifun
@@ -13,6 +13,7 @@ def memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         M.Cnd = e.Cnd
         M.valE = e.valE
         M.valA = E.valA
+        M.dstM = E.dstM
         M.dstE = e.dstE
     if M.bubble:
         M.stat = SBUB
@@ -61,6 +62,9 @@ def memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
             mem.write(toInteger(m.mem_addr), M.valA)
         except:
             m.dmem_error = True
+    if M.icode in [IMRMOVL]:
+        print(m.valM, regName[M.dstM])
+
     m.stat = SADR if m.dmem_error else M.stat
 
     ret = {

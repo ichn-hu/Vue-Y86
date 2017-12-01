@@ -98,6 +98,8 @@ class W:
         W.dstM = ZERO
         W.valM = ZERO
         W.valE = ZERO
+        W.bubble = False
+        W.stall = False
 
 class w:
     def __init__(self):

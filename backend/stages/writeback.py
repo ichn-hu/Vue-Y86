@@ -34,8 +34,9 @@ def writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
 def writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     w.Stat = SAOK if W.stat in [SBUB] else W.stat
-    if not W.bubble and not W.stall:
-        reg.write(W.dstE, W.valE, W.dstM, W.valM)
+    # TODO: whether the if need to be removed?
+    #if not W.bubble and not W.stall:
+    reg.write(W.dstE, W.valE, W.dstM, W.valM)
     return {'_Stat': w.Stat}
     
 

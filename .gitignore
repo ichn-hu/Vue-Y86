@@ -5,7 +5,6 @@ __pycache__/
 dist/
 npm-debug.log
 yarn-error.log
-*.txt
 
 # Editor directories and files
 .idea
@@ -13,3 +12,5 @@ yarn-error.log
 *.ntvs*
 *.njsproj
 *.sln
+*.txt
+

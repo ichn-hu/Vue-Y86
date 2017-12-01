@@ -31,9 +31,9 @@ def run():
     clock = 0
     ret = {}
     while w.Stat in [SAOK]:
-        clock += 1
-        if clock > MAXCLOCK:
+        if clock == MAXCLOCK:
             break
+            
         info = {
             'W': {},
             'M': {},
@@ -59,6 +59,7 @@ def run():
         info['mem'] = mem.info()
 
         ret[clock] = info
+        clock += 1
         
     ret['Stat'] = w.Stat
     return ret

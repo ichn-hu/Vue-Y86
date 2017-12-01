@@ -11,8 +11,7 @@ if __name__ == "__main__":
     c4 = io.StringIO(open("c4.yo", "r").read())
     instrCode = c1
     cpu.init(instrCode)
-    #mem.show()
     cpu.pipe.init()
     res = cpu.run()
     output = pprint.pformat(res, indent=2)
-    open('run.txt', 'w').write(output)
+    open('run.txt', 'w').write(json.dumps(res, indent=2))

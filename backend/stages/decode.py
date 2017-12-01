@@ -111,7 +111,7 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     elif d.srcB in [W.dstE]:
         d.valB = W.valE
     else:
-        d.valA = d.rvalA
+        d.valB = d.rvalB
 
     ret = {
         '_srcA': d.srcA,

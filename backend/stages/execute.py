@@ -236,7 +236,6 @@ def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
         elif E.ifun in [CJL] and (cc.SF ^ cc.OF):
             e.Cnd = True
         elif E.ifun in [CJE] and cc.ZF:
-            print(e.valA, e.valB, e.valE)
             e.Cnd = True
         elif E.ifun in [CJNE] and not cc.ZF:
             e.Cnd = True

@@ -125,3 +125,6 @@ def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     }
     return ret
 
+nxt.update({
+    E_valA: lambda 
+})

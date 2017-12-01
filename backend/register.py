@@ -25,6 +25,7 @@ class Register:
         ret = {}
         for i in range(0, 8):
             ret[regName[i]] = swichEndian(self.reg[i])
+        return ret
 
 if __name__ == "__main__":
     reg = Register()

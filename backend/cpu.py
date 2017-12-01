@@ -27,15 +27,16 @@ def init(instrCode):
 def run():
     clock = 0
     cur = PipeReg()
-    nxt = PipeReg()
     ret = {}
-    while cur.W.Stat in [SAOK]:
-        if clock == MAXCLOCK:
-            break
-        writeback(cur, nxt, reg)
+    Stat = SAOK
+    while Stat in [SAOK] and clock < MAXCLOCK:
+        nxt = PipeReg()
+        writeback(cur, nxt, reg, Stat)
         memory(cur, nxt, mem)
         execute(cur, nxt)
         decode(cur, nxt, reg)
         fetch(cur, nxt, mem)
-        clock += 1
+        update(cur, nxt)
 
+        clock += 1
+        

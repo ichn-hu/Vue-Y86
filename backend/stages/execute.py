@@ -1,55 +1,6 @@
 from const import *
 from misc import swichEndian, split2chunks, d2h, toInteger
 
-
-def executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-
-    E.stall = False
-    E.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
-        or (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
-        else False
-
-    if not E.stall and not E.bubble:
-        E.stat = D.stat
-        E.icode = D.icode
-        E.ifun = D.ifun
-        E.valC = D.valC
-        E.srcA = d.srcA
-        E.srcB = d.srcB
-        E.valA = d.valA
-        E.valB = d.valB
-        E.dstE = d.dstE
-        E.dstM = d.dstM
-    
-    if E.bubble:
-        E.stat = SBUB
-        E.icode = INOP
-        E.ifun = FNONE
-        E.valC = ZERO
-        E.srcA = RNONE
-        E.srcB = RNONE
-        E.valA = ZERO
-        E.valB = ZERO
-        E.dstE = RNONE
-        E.dstM = RNONE
-
-    ret = {
-        'stall': E.stall,
-        'bubble': E.bubble,
-        'stat': E.stat,
-        'icode': E.icode,
-        'ifun': E.ifun,
-        'valC': E.valC,
-        'srcA': E.srcA,
-        'srcB': E.srcB,
-        'valA': E.valA,
-        'valB': E.valB,
-        'dstE': E.dstE,
-        'dstM': E.dstM
-    }
-    return ret
-
-
 def toBinaryList(val):
     """
     turn unsigned val into a binary list, little endian
@@ -180,78 +131,71 @@ def aluXor(a, b, c, cc):
 
 
 def execute(cur, nxt):
-    if E.icode in [IRRMOVL, IOPL, ILEAVE]:
-        e.aluA = E.valA
-    elif E.icode in [IIRMOVL, IRMMOVL, IMRMOVL, IIADDL]:
-        e.aluA = E.valC
-    elif E.icode in [ICALL, IPUSHL]:
-        e.aluA = NEGFOUR
-    elif E.icode in [IRET, IPOPL]:
-        e.aluA = FOUR
+
+    aluA = ZERO
+    if cur.E.icode in [IRRMOVL, IOPL, ILEAVE]:
+        aluA = cur.E.valA
+    elif cur.E.icode in [IIRMOVL, IRMMOVL, IMRMOVL, IIADDL]:
+        aluA = cur.E.valC
+    elif cur.E.icode in [ICALL, IPUSHL]:
+        aluA = NEGFOUR
+    elif cur.E.icode in [IRET, IPOPL]:
+        aluA = FOUR
+
+    aluB = ZERO
+    if cur.E.icode in [IRMMOVL, IMRMOVL, IOPL, ICALL,
+                       IPUSHL, IRET, IPOPL, IIADDL]:
+        aluB = cur.E.valB
+    elif cur.E.icode in [ILEAVE]:
+        aluB = FOUR
+
+    if cur.E.icode in [IOPL]:
+        aluFun = int(cur.E.ifun)
     else:
-        e.aluA = ZERO
+        aluFun = AADD
 
-    if E.icode in [IRMMOVL, IMRMOVL, IOPL, ICALL,
-                   IPUSHL, IRET, IPOPL, IIADDL]:
-        e.aluB = E.valB
-    elif E.icode in [ILEAVE]:
-        e.aluB = FOUR
+    set_cc = True if cur.E.icode in [IOPL, IIADDL] and \
+        nxt.W.stat not in [SADR, SINS, SHLT] and \
+        cur.W.stat not in [SADR, SINS, SHLT] else False
+
+    cc = cur.Reg(**{'SF': None, 'ZF': None, 'OF': None})
+
+    if aluFun == AADD:
+        valE = aluAdd(aluA, aluB, set_cc, cc)
+    elif aluFun == ASUB:
+        valE = aluSub(aluA, aluB, set_cc, cc)
+    elif aluFun == AAND:
+        valE = aluAnd(aluA, aluB, set_cc, cc)
     else:
-        e.aluB = ZERO
+        valE = aluXor(aluA, aluB, set_cc, cc)
 
-    if E.icode in [IOPL]:
-        e.aluFun = int(E.ifun)
-    else:
-        e.aluFun = AADD
+    Cnd = False
+    if cur.E.icode in [IJXX, IRRMOVL]:
+        if cur.E.ifun in [CJMP]:
+            Cnd = True
+        elif cur.E.ifun in [CJLE] and ((cc.SF ^ cc.OF) | cc.ZF):
+            Cnd = True
+        elif cur.E.ifun in [CJL] and (cc.SF ^ cc.OF):
+            Cnd = True
+        elif cur.E.ifun in [CJE] and cc.ZF:
+            Cnd = True
+        elif cur.E.ifun in [CJNE] and not cc.ZF:
+            #    print(aluA, aluB, valE, cc.ZF)
+            Cnd = True
+        elif cur.E.ifun in [CJGE] and not (cc.SF ^ cc.OF):
+            Cnd = True
+        elif cur.E.ifun in [CJG] and not ((cc.SF ^ cc.OF) | cc.ZF):
+            Cnd = True
 
-    e.set_cc = E.icode in [IOPL, IIADDL] and \
-        m.stat not in [SADR, SINS, SHLT] and \
-        W.stat not in [SADR, SINS, SHLT]
-
-    e.valA = E.valA
-
-    if e.aluFun == AADD:
-        e.valE = aluAdd(e.aluA, e.aluB, e.set_cc, cc)
-        #print('233:', e.aluA, e.aluB, e.valE, cc.ZF)        
-    elif e.aluFun == ASUB:
-        e.valE = aluSub(e.aluA, e.aluB, e.set_cc, cc)
-    elif e.aluFun == AAND:
-        e.valE = aluAnd(e.aluA, e.aluB, e.set_cc, cc)
-    else:
-        e.valE = aluXor(e.aluA, e.aluB, e.set_cc, cc)
-
-    e.Cnd = False
-    if E.icode in [IJXX, IRRMOVL]:
-        if E.ifun in [CJMP]:
-            e.Cnd = True
-        elif E.ifun in [CJLE] and ((cc.SF ^ cc.OF) | cc.ZF):
-            e.Cnd = True
-        elif E.ifun in [CJL] and (cc.SF ^ cc.OF):
-            e.Cnd = True
-        elif E.ifun in [CJE] and cc.ZF:
-            e.Cnd = True
-        elif E.ifun in [CJNE] and not cc.ZF:
-        #    print(e.aluA, e.aluB, e.valE, cc.ZF)
-            e.Cnd = True
-        elif E.ifun in [CJGE] and not (cc.SF ^ cc.OF):
-            e.Cnd = True
-        elif E.ifun in [CJG] and not ((cc.SF ^ cc.OF) | cc.ZF):
-            e.Cnd = True
-
-    e.dstE = RNONE if E.icode in [IRRMOVL] and not e.Cnd else E.dstE
-
-    ret = {
-        '_aluA': e.aluA,
-        '_aluB': e.aluB,
-        '_aluFun': e.aluFun,
-        '_set_cc': e.set_cc,
-        '_valE': e.valE,
-        '_Cnd': e.Cnd,
-        '_dstE': e.dstE,
-        '_valA': e.valA
-    }
-    return ret
-
+    nxt.M = cur.Reg(**{
+        'stat': cur.E.stat,
+        'icode': cur.E.icode,
+        'Cnd': Cnd,
+        'valE': valE,
+        'valA': cur.E.valA,
+        'dstM': cur.E.dstM,
+        'dstE': RNONE if cur.E.icode in [IRRMOVL] and not Cnd else cur.E.dstE
+    })
 
 
 if __name__ == "__main__":

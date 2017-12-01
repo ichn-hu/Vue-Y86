@@ -1,23 +1,6 @@
 from const import *
 from misc import swichEndian, split2chunks, toInteger, int16
 
-
-def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    F.bubble = False
-    if (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB]) \
-            or IRET in [D.icode, E.icode, M.icode]:
-        F.stall = True
-        # load interloak
-        # 或者无法预测
-    else:
-        F.stall = False
-
-    if not F.bubble and not F.stall:
-        F.predPC = f.predPC
-
-    return {'stall': F.stall, 'bubble': F.bubble, 'predPC': F.predPC}
-
-
 def fetch(cur, nxt, mem):
     pc = cur.F.predPC
 

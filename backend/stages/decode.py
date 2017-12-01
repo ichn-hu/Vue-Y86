@@ -2,46 +2,6 @@ from const import *
 from misc import swichEndian, split2chunks
 
 
-def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-
-    D.stall = True if E.icode in [IMRMOVL, IPOPL] \
-        and E.dstM in [srcA, srcB] else False
-        # load interlock
-    D.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
-        or (not (E.icode in [IMRMOVL, IPOPL] and E.dstM in [srcA, srcB])
-            and IRET in [D.icode, E.icode, M.icode]) else False
-        # 分支预测错误
-
-    if not D.stall and not D.bubble:
-        D.stat = f.stat
-        D.icode = f.icode
-        D.ifun = f.ifun
-        D.valC = f.valC
-        D.valP = f.valP
-        D.rA = f.rA
-        D.rB = f.rB
-    if D.bubble:
-        D.stat = SBUB
-        D.icode = INOP
-        D.ifun = FNONE
-        D.valC = ZERO
-        D.valP = ZERO
-        D.rA = RNONE
-        D.rB = RNONE
-
-    ret = {
-        'stall': D.stall,
-        'bubble': D.bubble,
-        'stat': D.stat,
-        'icode': D.icode,
-        'ifun': D.ifun,
-        'valC': D.valC,
-        'valP': D.valP,
-        'rA': D.rA,
-        'rB': D.rB
-    }
-    return ret
-
 def decode(cur, nxt, reg):
     srcA = RNONE
     if cur.D.icode in [IRRMOVL, IRMMOVL, IOPL, IPUSHL]:
@@ -89,6 +49,7 @@ def decode(cur, nxt, reg):
     elif srcA == cur.W.dstE:
         valA = cur.W.valE
         # 上上上句是计算
+        # 理论上讲应该写回了
 
     if srcB in [nxt.M.dstE]:
         valB = nxt.M.valE # forward, 

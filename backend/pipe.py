@@ -34,11 +34,8 @@ class PipeReg:
         def __init__(self, **entries):
             self.__dict__.update(entries)
     def __init__(self):
-        self.cc = self.Reg(**{
-            ZF: True, SF: False, OF: False
-        })
         self.F = self.Reg(**{
-            predPC: ZERO, stall: False, bubble: False
+            predPC: ZERO
         })
         self.D = self.Reg(**{
             stat: SBUB,
@@ -48,8 +45,6 @@ class PipeReg:
             rB: RNONE,
             valC: ZERO,
             valP: ZERO,
-            stall: False,
-            bubble: False
         })
         self.E = self.Reg(**{
             stat: SBUB,
@@ -62,8 +57,6 @@ class PipeReg:
             dstM: RNONE,
             srcA: RNONE,
             srcB: RNONE,
-            bubble: False,
-            stall: False
         })
         self.M = self.Reg(**{
             stat: SBUB,
@@ -73,8 +66,6 @@ class PipeReg:
             Cnd: False,
             dstM: RNONE,
             dstE: RNONE,
-            bubble: False,
-            stall: False
         })
         self.W = self.Reg(**{
             icode: INOP,
@@ -83,9 +74,6 @@ class PipeReg:
             dstM: ZERO,
             valM: ZERO,
             valE: ZERO,
-            Stat: SAOK,
-            bubble: False,
-            stall: False
         })
 
         

@@ -1,7 +1,6 @@
 from misc import split2chunks
+from const import MEMSIZE
 import re
-
-MEMSIZE = 1 << 12
 
 
 class Memory:

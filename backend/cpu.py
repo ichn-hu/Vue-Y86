@@ -6,14 +6,15 @@ CPU implemention, including all the control logics
 import pipe
 from memory import Memory
 from misc import split2chunks, swichEndian
-from pipe import D, E, F, M, W, d, e, f, m, w, cc
+from pipe import PipeReg
 from register import Register
 from const import *
-from stages.fetch import fetchRun, fetchUpdate
-from stages.memory import memoryRun, memoryUpdate
-from stages.decode import decodeRun, decodeUpdate
-from stages.execute  import executeRun, executeUpdate
-from stages.writeback import writebackRun, writebackUpdate
+from stages.fetch import fetch
+from stages.memory import memory
+from stages.decode import decode
+from stages.execute  import execute
+from stages.writeback import writeback
+from stages.control import update
 
 reg, mem = None, None
 
@@ -22,49 +23,19 @@ def init(instrCode):
     reg = Register()
     mem = Memory()
     mem.load(instrCode)
-    pipe.init()
-
-
-MAXCLOCK = 100
-
+    
 def run():
     clock = 0
+    cur = PipeReg()
+    nxt = PipeReg()
     ret = {}
-    while w.Stat in [SAOK]:
+    while cur.W.Stat in [SAOK]:
         if clock == MAXCLOCK:
             break
-            
-        info = {
-            'W': {},
-            'M': {},
-            'E': {},
-            'D': {},
-            'F': {},
-            'cyc': clock
-        }
-        
-        info['W'].update(writebackUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['W'].update(writebackRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-
-        info['M'].update(memoryUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['M'].update(memoryRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-
-        info['E'].update(executeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['E'].update(executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-
-        info['D'].update(decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['D'].update(decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-
-        info['F'].update(fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-        info['F'].update(fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg))
-
-
-        info['reg'] = reg.info()
-        info['mem'] = mem.info()
-
-        ret[clock] = info
+        writeback(cur, nxt, reg)
+        memory(cur, nxt, mem)
+        execute(cur, nxt)
+        decode(cur, nxt, reg)
+        fetch(cur, nxt, mem)
         clock += 1
-        
-    ret['Stat'] = w.Stat
-    return ret
 

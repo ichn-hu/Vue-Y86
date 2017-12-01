@@ -64,3 +64,6 @@ AADD = 0x0
 ASUB = 0x1
 AAND = 0x2
 AXOR = 0x4
+
+MAXCLOCK = 100
+MEMSIZE = 1 << 12

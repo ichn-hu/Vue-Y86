@@ -2,115 +2,155 @@
 所有的流水线寄存器.
 """
 from const import *
-class cc:
-    def __init__(self):
-        cc.ZF = True
-        cc.SF = False
-        cc.OF = False
 
-class F:
-    def __init__(self):
-        F.predPC = ZERO                # 预测的PC
-        F.stall = False
-        F.bubble = False
+ZF = 'ZF'
+SF = 'SF'
+OF = 'OF'
+predPC = 'predPC'
+stall = 'stall'
+bubble = 'bubble'
+stat = 'stat'
+Stat = 'Stat'
+icode = 'icode'
+ifun = 'ifun'
+rA = 'rA'
+rB = 'rB'
+valA = 'valA'
+valB = 'valB'
+valC = 'valC'
+valP = 'valP'
+valM = 'valM'
+valE = 'valE'
+srcA = 'srcA'
+srcB = 'srcB'
+dstA = 'dstA'
+dstB = 'dstB'
+dstE = 'dstE'
+dstM = 'dstM'
+Cnd = 'Cnd'
 
-class f:
+class PipeReg:
+    class Reg:
+        def __init__(self, **entries):
+            self.__dict__.update(entries)
     def __init__(self):
-        f.imem_error = False
-        f.instr_valid = True
-        f.stat = SAOK
-        f.pc = ZERO                    # 这一步执行的PC
-        f.icode = INOP                 # 由mem读入
-        f.ifun = FNONE                 # 由mem读入
-        f.valP = ZERO                  # 自然下一个PC
-        f.valC = ZERO                  # 读入的常量
-        f.predPC = ZERO                # 预测的PC, update时传给F.predPC
-        f.rA = RNONE                   # 由mem读入
-        f.rB = RNONE                   # 同上
+        self.cc = self.Reg(**{
+            ZF: True, SF: False, OF: False
+        })
+        self.F = self.Reg(**{
+            predPC: ZERO, stall: False, bubble: False
+        })
+        self.D = self.Reg(**{
+            stat: SBUB,
+            icode: INOP,
+            ifun: FNONE,
+            rA: RNONE,
+            rB: RNONE,
+            valC: ZERO,
+            valP: ZERO,
+            stall: False,
+            bubble: False
+        })
+        self.E = self.Reg(**{
+            stat: SBUB,
+            icode: INOP,
+            ifun: FNONE,
+            valC: ZERO,
+            valA: ZERO,
+            valB: ZERO,
+            dstE: RNONE,
+            dstM: RNONE,
+            srcA: RNONE,
+            srcB: RNONE,
+            bubble: False,
+            stall: False
+        })
+        self.M = self.Reg(**{
+            stat: SBUB,
+            icode: INOP,
+            valA: ZERO,
+            valE: ZERO,
+            Cnd: False,
+            dstM: RNONE,
+            dstE: RNONE,
+            bubble: False,
+            stall: False
+        })
+        self.W = self.Reg(**{
+            icode: INOP,
+            stat: SBUB,
+            dstE: ZERO,
+            dstM: ZERO,
+            valM: ZERO,
+            valE: ZERO,
+            Stat: SAOK,
+            bubble: False,
+            stall: False
+        })
 
-class D:
-    def __init__(self):
-        D.stat = SAOK
-        D.icode = INOP
-        D.ifun = FNONE
-        D.rA = RNONE                   # mem读入
-        D.rB = RNONE                   # mem读入
-        D.valC = ZERO                  # 同上
-        D.valP = ZERO                  # 同上
-        D.stall = False
-        D.bubble = False
         
 
-class d:
+class PipeReg2:
+    class CondCode:
+        def __init__(self):
+            self.ZF = True
+            self.SF = False
+            self.OF = False
+    class Fetch:
+        def __init__(self):
+            self.predPC = ZERO
+            self.stall = False
+            self.bubble = False
+    class Decode:
+        def __init__(self):
+            self.stat = SBUB
+            self.icode = INOP
+            self.ifun = FNONE
+            self.rA = RNONE
+            self.rB = RNONE
+            self.valC = ZERO
+            self.valP = ZERO
+            self.stall = False
+            self.bubble = False
+    class Execute:
+        def __init__(self):
+            self.stat = SBUB
+            self.icode = INOP
+            self.ifun = FNONE
+            self.valC = ZERO
+            self.valA = ZERO
+            self.valB = ZERO
+            self.dstE = RNONE
+            self.dstM = RNONE
+            self.srcA = RNONE
+            self.srcB = RNONE
+            self.bubble = False
+            self.stall = False
+    class Memory:
+        def __init__(self):
+            self.stat = SBUB
+            self.icode = INOP
+            self.valA = ZERO
+            self.valE = ZERO
+            self.Cnd = False
+            self.dstM = RNONE
+            self.dstE = RNONE
+            self.bubble = False
+            self.stall = False
+    class Writeback:
+        def __init__(self):
+            self.icode = INOP
+            self.stat = SBUB
+            self.dstE = ZERO
+            self.dstM = ZERO
+            self.valM = ZERO
+            self.valE = ZERO
+            self.Stat = SAOK
+            self.bubble = False
+            self.stall = False
     def __init__(self):
-        d.srcA = RNONE
-        d.srcB = RNONE
-        d.valA = ZERO
-        d.valB = ZERO
-        d.dstE = RNONE
-        d.dstM = RNONE
-        
-
-class E:
-    def __init__(self):
-        E.stat = SAOK
-        E.icode = INOP
-        E.ifun = FNONE
-        E.valA = ZERO
-        E.dstE = RNONE
-        E.dstM = RNONE
-        E.bubble = False
-        E.stall = False
-        
-
-class e:
-    def __init__(self):
-        e.dstE = RNONE
-        e.valE = ZERO
-        e.valA = ZERO
-        e.Cnd = False
-
-        
-
-class M:
-    def __init__(self):
-        M.stat = SAOK
-        M.icode = INOP
-        M.valA = ZERO
-        M.valE = ZERO
-        M.Cnd = False
-        M.dstM = RNONE
-        M.dstE = RNONE
-        M.bubble = False
-        M.stall = False
-
-class m:
-    def __init__(self):
-        m.valM = ZERO
-        m.stat = SAOK
-        
-
-class W:
-    def __init__(self):
-        W.icode = INOP
-        W.stat = SAOK
-        W.dstE = ZERO
-        W.dstM = ZERO
-        W.valM = ZERO
-        W.valE = ZERO
-        W.bubble = False
-        W.stall = False
-
-class w:
-    def __init__(self):
-        w.Stat = SAOK
-
-STATUS = ()
-
-def init():
-    global STATUS
-    STATUS = F(), f(), D(), d(), E(), e(), M(), m(), W(), w(), cc()
-
-
-if __name__ == "__main__":
-    init()
+        self.W = self.Writeback()
+        self.M = self.Memory()
+        self.E = self.Execute()
+        self.D = self.Decode()
+        self.F = self.Fetch()

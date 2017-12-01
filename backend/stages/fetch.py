@@ -18,76 +18,75 @@ def fetchUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     return {'stall': F.stall, 'bubble': F.bubble, 'predPC': F.predPC}
 
 
-def fetchRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    if M.icode in [IJXX] and not M.Cnd:
-        f.pc = M.valA
+def fetch(cur, nxt, mem):
+    pc = cur.F.predPC
+
+    if cur.M.icode in [IJXX] and not cur.M.Cnd:
+        pc = cur.M.valA
         # 这里的valA就是IJXX在decode时的valP
-    elif W.icode in [IRET]:
-        print( W.valM)
-        f.pc = W.valM
-    else:
-        f.pc = F.predPC
+    elif cur.W.icode in [IRET]:
+        pc = cur.W.valM
 
     try:
-        f.icode, f.ifun = split2chunks(mem.read(toInteger(f.pc), 1), 1)
-        f.icode = int16(f.icode)
-        f.ifun = int16(f.ifun)
+        icode, ifun = split2chunks(mem.read(toInteger(pc), 1), 1)
+        icode = int16(icode)
+        ifun = int16(ifun)
     except:
-        f.imem_error = True
-        f.icode = INOP
-        f.ifun = FNONE
+        imem_error = True
+        icode = INOP
+        ifun = FNONE
 
-    f.instr_valid = f.ifun in [INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
-                               IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL]
+    instr_valid = ifun in [INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
+                           IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL]
 
-    if f.imem_error:
-        f.stat = SADR
-    elif not f.instr_valid:
-        f.stat = SINS
-    elif f.icode == IHALT:
-        f.stat = SHLT
+    need_regid = icode in [IRRMOVL, IOPL, IPUSHL, IPOPL,
+                           IIRMOVL, IRMMOVL, IMRMOVL]
+    need_valC = icode in [IIRMOVL, IRMMOVL, IMRMOVL,
+                          IJXX, ICALL, IIADDL]
+    valP = swichEndian(hex(toInteger(pc) + 1
+                           + 1 * int(need_regid)
+                           + 4 * int(need_valC)))
+    valC = None
+    if need_valC:
+        try:
+            valC = mem.read(toInteger(pc) +
+                        1 + int(need_regid), 4)
+        except:
+            imem_error = True
+
+    rA, rB = RNONE, RNONE
+    if need_regid:
+        try:
+            rA, rB = split2chunks(mem.read(toInteger(pc) + 1, 1), 1)
+            rA = int16(rA)
+            rB = int16(rB)
+        except:
+            imem_error = True
+
+    if imem_error:
+        stat = SADR
+    elif not instr_valid:
+        stat = SINS
+    elif icode == IHALT:
+        stat = SHLT
     else:
-        f.stat = SAOK
+        stat = SAOK
 
-    f.need_regid = f.icode in [IRRMOVL, IOPL, IPUSHL, IPOPL,
-                               IIRMOVL, IRMMOVL, IMRMOVL]
-    f.need_valC = f.icode in [IIRMOVL, IRMMOVL, IMRMOVL,
-                              IJXX, ICALL, IIADDL]
-    f.valP = swichEndian(hex(toInteger(f.pc) + 1
-                             + 1 * int(f.need_regid)
-                             + 4 * int(f.need_valC)))
-
-    if f.need_valC:
-        f.valC = mem.read(toInteger(f.pc) +
-                          1 + int(f.need_regid), 4)
+    if icode in [IJXX, ICALL]:
+        predPC = valC
     else:
-        f.valC = None
+        predPC = valP
 
-    if f.icode in [IJXX, ICALL]:
-        f.predPC = f.valC
-    else:
-        f.predPC = f.valP
 
-    if f.need_regid:
-        f.rA, f.rB = split2chunks(mem.read(toInteger(f.pc) + 1, 1), 1)
-        f.rA = int16(f.rA)
-        f.rB = int16(f.rB)
-    else:
-        f.rA, f.rB = RNONE, RNONE
-
-    ret = {
-        '_pc': f.pc,
-        '_stat': f.stat,
-        '_icode': f.icode,
-        '_ifun': f.ifun,
-        '_imem_error': f.imem_error,
-        '_need_regid': f.need_regid,
-        '_need_valC': f.need_valC,
-        '_instr_valid': f.instr_valid,
-        '_valP': f.valP,
-        '_valC': f.valC,
-        '_rA': f.rA,
-        '_rB': f.rB,
-        '_predPC': f.predPC
-    }
-    return ret
+    nxt.D = nxt.Reg(**{
+        'icode': icode,
+        'ifun': ifun,
+        'stat': stat,
+        'rA': rA,
+        'rB': rB,
+        'valC': valC,
+        'valP': valP,
+    })
+    nxt.F = cur.Reg(**{
+        'predPC': predPC
+    })

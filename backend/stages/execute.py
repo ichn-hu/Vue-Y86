@@ -179,7 +179,7 @@ def aluXor(a, b, c, cc):
     return swichEndian(val)
 
 
-def executeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
+def execute(cur, nxt):
     if E.icode in [IRRMOVL, IOPL, ILEAVE]:
         e.aluA = E.valA
     elif E.icode in [IIRMOVL, IRMMOVL, IMRMOVL, IIADDL]:

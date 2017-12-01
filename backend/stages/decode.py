@@ -5,10 +5,10 @@ from misc import swichEndian, split2chunks
 def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
 
     D.stall = True if E.icode in [IMRMOVL, IPOPL] \
-        and E.dstM in [d.srcA, d.srcB] else False
+        and E.dstM in [srcA, srcB] else False
         # load interlock
     D.bubble = True if (E.icode in [IJXX] and not e.Cnd) \
-        or (not (E.icode in [IMRMOVL, IPOPL] and E.dstM in [d.srcA, d.srcB])
+        or (not (E.icode in [IMRMOVL, IPOPL] and E.dstM in [srcA, srcB])
             and IRET in [D.icode, E.icode, M.icode]) else False
         # 分支预测错误
 
@@ -42,89 +42,74 @@ def decodeUpdate(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
     }
     return ret
 
+def decode(cur, nxt, reg):
+    srcA = RNONE
+    if cur.D.icode in [IRRMOVL, IRMMOVL, IOPL, IPUSHL]:
+        srcA = cur.D.rA
+    elif cur.D.icode in [IPOPL, IRET]:
+        srcA = RESP
+    elif cur.D.icode in [ILEAVE]:
+        srcA = REBP
+    srcB = RNONE
+    if cur.D.icode in [IOPL, IRMMOVL, IMRMOVL, IIADDL]:
+        srcB = cur.D.rB
+    elif cur.D.icode in [IPUSHL, IPOPL, ICALL, IRET]:
+        srcB = RESP
 
-def decodeRun(D, E, F, M, W, d, e, f, m, w, cc, mem, reg):
-    """
-    Write or read data from register file, need to deal with 
-    data-forwarding. 
-    """
+    dstE = RNONE
+    if cur.D.icode in [IRRMOVL, IIRMOVL, IOPL, IIADDL]:
+        dstE = cur.D.rB
+    elif cur.D.icode in [IPUSHL, IPOPL, ICALL, IRET, ILEAVE]:
+        dstE = RESP
+    dstM = RNONE
+    if cur.D.icode in [IMRMOVL, IPOPL]:
+        dstM = cur.D.rA
+    elif cur.D.icode in [ILEAVE]:
+        dstM = REBP
 
-    if D.icode in [IRRMOVL, IRMMOVL, IOPL, IPUSHL]:
-        d.srcA = D.rA
-    elif D.icode in [IPOPL, IRET]:
-        d.srcA = RESP
-    elif D.icode in [ILEAVE]:
-        d.srcA = REBP
-    else:
-        d.srcA = RNONE
+    valA, valB = reg.read(srcA, srcB)
 
-    if D.icode in [IOPL, IRMMOVL, IMRMOVL, IIADDL]:
-        d.srcB = D.rB
-    elif D.icode in [IPUSHL, IPOPL, ICALL, IRET]:
-        d.srcB = RESP
-    else:
-        d.srcB = RNONE
-
-    if D.icode in [IRRMOVL, IIRMOVL, IOPL, IIADDL]:
-        d.dstE = D.rB
-    elif D.icode in [IPUSHL, IPOPL, ICALL, IRET, ILEAVE]:
-        d.dstE = RESP
-    else:
-        d.dstE = RNONE
-
-    if D.icode in [IMRMOVL, IPOPL]:
-        d.dstM = D.rA
-    elif D.icode in [ILEAVE]:
-        d.dstM = REBP
-    else:
-        d.dstM = RNONE
-
-    d.rvalA, d.rvalB = reg.read(d.srcA, d.srcB)
-
-    if D.icode in [ICALL, IJXX]:
-        d.valA = D.valP
+    if cur.D.icode in [ICALL, IJXX]:
+        valA = cur.D.valP
         # 对于call和jmp, 不需要从寄存器读, 用valA代替valP
-    elif d.srcA in [e.dstE]:
-        d.valA = e.valE
+    elif srcA in [nxt.M.dstE]:
+        valA = nxt.M.valE
         # ALU计算结果. add $eax, $ebx; mov %ebx, %ecx
-    elif d.srcA in [M.dstM]:
-        d.valA = m.valM
+        # 当前状态的e.valE就是下个状态的M.valE
+    elif srcA in [cur.M.dstM]:
+        valA = nxt.W.valM
         # 内存读取结果. mov ($eax), %ebx; mov %ebx, %ecx
-    elif d.srcA in [M.dstE]:
-        d.valA = M.valE
+        # 当前状态的m.valM就是下个状态的W.valM
+    elif srcA in [cur.M.dstE]:
+        valA = cur.M.valE
         # 上上句是计算. add $eax, $ebx; xor %ecx, %ecx; mov %ebx, %ecx
-    elif d.srcA in [W.dstM]:
-        d.valA = W.valM
+    elif srcA in [cur.W.dstM]:
+        valA = cur.W.valM
         # 上上句是读内存
-    elif d.srcA == W.dstE:
-        d.valA = W.valE
+    elif srcA == cur.W.dstE:
+        valA = cur.W.valE
         # 上上上句是计算
-    else:
-        d.valA = d.rvalA
 
-    if d.srcB in [e.dstE]:
-        d.valB = e.valE # forward, 
-    elif d.srcB in [M.dstM]:
-        d.valB = m.valM
-    elif d.srcB in [M.dstE]:
-        d.valB = M.valE
-    elif d.srcB in [W.dstM]:
-        d.valB = W.valM
-    elif d.srcB in [W.dstE]:
-        d.valB = W.valE
-    else:
-        d.valB = d.rvalB
-
-    ret = {
-        '_srcA': d.srcA,
-        '_srcB': d.srcB,
-        '_valA': d.valA,
-        '_valB': d.valB,
-        '_dstE': d.dstE,
-        '_dstM': d.dstM
-    }
-    return ret
-
-nxt.update({
-    E_valA: lambda 
-})
+    if srcB in [nxt.M.dstE]:
+        valB = nxt.M.valE # forward, 
+    elif srcB in [cur.M.dstM]:
+        valB = nxt.W.valM
+    elif srcB in [cur.M.dstE]:
+        valB = cur.M.valE
+    elif srcB in [cur.W.dstM]:
+        valB = cur.W.valM
+    elif srcB in [cur.W.dstE]:
+        valB = cur.W.valE
+    
+    nxt.E = cur.Reg(**{
+        'stat': cur.D.stat,
+        'icode': cur.D.icode,
+        'ifun': cur.D.ifun,
+        'valC': cur.D.valC,
+        'valA': valA,
+        'valB': valB,
+        'dstE': dstE,
+        'dstM': dstM,
+        'srcA': srcA,
+        'srcB': srcB
+    })

@@ -5,7 +5,7 @@
   0x000: 30f400010000 | init:	irmovl Stack, %esp  	# Set up stack pointer  
   0x006: 30f500010000 | 	irmovl Stack, %ebp  	# Set up base pointer   
   0x00c: 8024000000   | 	call Main		# Execute main program
-  0x011: 00           | 	halt			# Terminate program 
+  0x011: 10           | 	halt			# Terminate program 
                       | 
                       | # Array of 4 elements
   0x014:              | 	.align 4 	

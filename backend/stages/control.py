@@ -17,6 +17,16 @@ def update(cur, nxt):
         or cur.W.stat in [SADR, SINS, SHLT] else False
     W_stall = True if cur.W.stat in [SADR, SINS, SHLT] else False
 
+    status = {
+        'F_stall': F_stall,
+        'D_stall': D_stall,
+        'D_bubble': D_bubble,
+        'E_bubble': E_bubble,
+        'M_bubble': M_bubble,
+        'W_stall': W_stall
+    }
+    print(status)
+
     if F_stall:
         nxt.F = cur.F
     if D_stall:
@@ -32,6 +42,7 @@ def update(cur, nxt):
             'rB': RNONE,
             'valC': ZERO,
             'valP': ZERO,
+            'ins': '---'
         })
     if E_bubble:
         nxt.E = cur.Reg(**{
@@ -45,6 +56,7 @@ def update(cur, nxt):
             'dstM': RNONE,
             'srcA': RNONE,
             'srcB': RNONE,
+            'ins': '---'
         })
     if M_bubble:
         nxt.M = cur.Reg(**{
@@ -55,5 +67,10 @@ def update(cur, nxt):
             'Cnd': False,
             'dstM': RNONE,
             'dstE': RNONE,
+            'ins': '---'
         })
-    cur = nxt
+    cur.F = nxt.F
+    cur.D = nxt.D
+    cur.E = nxt.E
+    cur.M = nxt.M
+    cur.W = nxt.W

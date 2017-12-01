@@ -8,24 +8,20 @@ def decode(cur, nxt, reg):
         srcA = cur.D.rA
     elif cur.D.icode in [IPOPL, IRET]:
         srcA = RESP
-    elif cur.D.icode in [ILEAVE]:
-        srcA = REBP
     srcB = RNONE
-    if cur.D.icode in [IOPL, IRMMOVL, IMRMOVL, IIADDL]:
+    if cur.D.icode in [IOPL, IRMMOVL, IMRMOVL]:
         srcB = cur.D.rB
     elif cur.D.icode in [IPUSHL, IPOPL, ICALL, IRET]:
         srcB = RESP
 
     dstE = RNONE
-    if cur.D.icode in [IRRMOVL, IIRMOVL, IOPL, IIADDL]:
+    if cur.D.icode in [IRRMOVL, IIRMOVL, IOPL]:
         dstE = cur.D.rB
-    elif cur.D.icode in [IPUSHL, IPOPL, ICALL, IRET, ILEAVE]:
+    elif cur.D.icode in [IPUSHL, IPOPL, ICALL, IRET]:
         dstE = RESP
     dstM = RNONE
     if cur.D.icode in [IMRMOVL, IPOPL]:
         dstM = cur.D.rA
-    elif cur.D.icode in [ILEAVE]:
-        dstM = REBP
 
     valA, valB = reg.read(srcA, srcB)
 
@@ -72,5 +68,6 @@ def decode(cur, nxt, reg):
         'dstE': dstE,
         'dstM': dstM,
         'srcA': srcA,
-        'srcB': srcB
+        'srcB': srcB,
+        'ins': cur.D.ins
     })

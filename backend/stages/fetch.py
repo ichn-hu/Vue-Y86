@@ -1,5 +1,6 @@
 from const import *
 from misc import swichEndian, split2chunks, toInteger, int16
+import sys
 
 def fetch(cur, nxt, mem):
     pc = cur.F.predPC
@@ -10,6 +11,7 @@ def fetch(cur, nxt, mem):
     elif cur.W.icode in [IRET]:
         pc = cur.W.valM
 
+    imem_error = False
     try:
         icode, ifun = split2chunks(mem.read(toInteger(pc), 1), 1)
         icode = int16(icode)
@@ -59,8 +61,7 @@ def fetch(cur, nxt, mem):
         predPC = valC
     else:
         predPC = valP
-
-
+    #print(predPC)
     nxt.D = nxt.Reg(**{
         'icode': icode,
         'ifun': ifun,
@@ -69,7 +70,9 @@ def fetch(cur, nxt, mem):
         'rB': rB,
         'valC': valC,
         'valP': valP,
+        'ins': pc
     })
     nxt.F = cur.Reg(**{
         'predPC': predPC
     })
+    #sys.exit(str(nxt.F.predPC))

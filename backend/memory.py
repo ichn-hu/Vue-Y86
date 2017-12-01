@@ -14,13 +14,13 @@ class Memory:
         self.mem = ["00"] * MEMSIZE
 
     def read(self, pos, length):
-        if pos < 0 or pos + length > MEMSIZE:
+        if pos < 0 or pos + length >= MEMSIZE:
             raise Exception(
                 ("Trying to read data from %d to %d" % (pos, pos + length)))
         return "".join(self.mem[pos: pos + length])
 
     def write(self, pos, val):
-        if pos < 0 or pos + len(val) > MEMSIZE:
+        if pos < 0 or pos + len(val) >= MEMSIZE:
             raise Exception(
                 ("Trying to write data from %d to %d" % (pos, pos + len(val))))
         self.mem[pos: pos + len(val) // 2] = split2chunks(val, 2)

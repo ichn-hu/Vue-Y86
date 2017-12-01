@@ -75,8 +75,8 @@ def aluSub(a, b, c, cc):
     if c:
         cc.ZF = True if s[0:32] == [0] * 32 else False
         cc.SF = True if s[31] == 1 else False
-        cc.OF = True if (valA < 0 and valB > 0 and res < 0) \
-            or (valA > 0 and valB < 0 and res > 0) else False
+        cc.OF = True if (valA > 0 and valB < 0 and res < 0) \
+            or (valA > 0 and valB < 0 and res < 0) else False
     s = list(reversed(s[0:32]))
     r = []
     for i in range(0, 32, 4):
@@ -130,12 +130,12 @@ def aluXor(a, b, c, cc):
     return swichEndian(val)
 
 
-def execute(cur, nxt):
+def execute(cur, nxt, cc):
 
     aluA = ZERO
-    if cur.E.icode in [IRRMOVL, IOPL, ILEAVE]:
+    if cur.E.icode in [IRRMOVL, IOPL]:
         aluA = cur.E.valA
-    elif cur.E.icode in [IIRMOVL, IRMMOVL, IMRMOVL, IIADDL]:
+    elif cur.E.icode in [IIRMOVL, IRMMOVL, IMRMOVL]:
         aluA = cur.E.valC
     elif cur.E.icode in [ICALL, IPUSHL]:
         aluA = NEGFOUR
@@ -144,26 +144,22 @@ def execute(cur, nxt):
 
     aluB = ZERO
     if cur.E.icode in [IRMMOVL, IMRMOVL, IOPL, ICALL,
-                       IPUSHL, IRET, IPOPL, IIADDL]:
+                       IPUSHL, IRET, IPOPL]:
         aluB = cur.E.valB
-    elif cur.E.icode in [ILEAVE]:
-        aluB = FOUR
 
     if cur.E.icode in [IOPL]:
         aluFun = int(cur.E.ifun)
     else:
         aluFun = AADD
 
-    set_cc = True if cur.E.icode in [IOPL, IIADDL] and \
+    set_cc = True if cur.E.icode in [IOPL] and \
         nxt.W.stat not in [SADR, SINS, SHLT] and \
         cur.W.stat not in [SADR, SINS, SHLT] else False
-
-    cc = cur.Reg(**{'SF': None, 'ZF': None, 'OF': None})
 
     if aluFun == AADD:
         valE = aluAdd(aluA, aluB, set_cc, cc)
     elif aluFun == ASUB:
-        valE = aluSub(aluA, aluB, set_cc, cc)
+        valE = aluSub(aluB, aluA, set_cc, cc)
     elif aluFun == AAND:
         valE = aluAnd(aluA, aluB, set_cc, cc)
     else:
@@ -180,7 +176,6 @@ def execute(cur, nxt):
         elif cur.E.ifun in [CJE] and cc.ZF:
             Cnd = True
         elif cur.E.ifun in [CJNE] and not cc.ZF:
-            #    print(aluA, aluB, valE, cc.ZF)
             Cnd = True
         elif cur.E.ifun in [CJGE] and not (cc.SF ^ cc.OF):
             Cnd = True
@@ -194,7 +189,8 @@ def execute(cur, nxt):
         'valE': valE,
         'valA': cur.E.valA,
         'dstM': cur.E.dstM,
-        'dstE': RNONE if cur.E.icode in [IRRMOVL] and not Cnd else cur.E.dstE
+        'dstE': RNONE if cur.E.icode in [IRRMOVL] and not Cnd else cur.E.dstE,
+        'ins': cur.E.ins
     })
 
 

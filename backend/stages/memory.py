@@ -33,5 +33,6 @@ def memory(cur, nxt, mem):
         'valE': cur.M.valE,
         'valM': valM,
         'dstE': cur.M.dstE,
-        'dstM': cur.M.dstM
+        'dstM': cur.M.dstM,
+        'ins': cur.M.ins
     })

@@ -1,7 +1,12 @@
-from pipe import PipeReg
+from stages.execute import aluAdd, aluAnd, aluSub, aluXor
 
-if __name__ == "__main__":
-    a = PipeReg()
-    print(a.D.stat)
-    b = a.Reg(**{'a': a})
-    print(b.a.D.stat)
+class CC:
+    def __init__(self):
+        CC.ZF = None
+        CC.SF = None
+        CC.OF = None
+
+a = "0f0f0f0f"
+b = "f0f0f0f0"
+c = aluAdd(a, b, True, CC)
+print(c, CC.ZF, CC.SF, CC.OF)

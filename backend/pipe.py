@@ -45,6 +45,7 @@ class PipeReg:
             rB: RNONE,
             valC: ZERO,
             valP: ZERO,
+            'ins': '---'
         })
         self.E = self.Reg(**{
             stat: SBUB,
@@ -57,6 +58,7 @@ class PipeReg:
             dstM: RNONE,
             srcA: RNONE,
             srcB: RNONE,
+            'ins': '---'
         })
         self.M = self.Reg(**{
             stat: SBUB,
@@ -66,6 +68,7 @@ class PipeReg:
             Cnd: False,
             dstM: RNONE,
             dstE: RNONE,
+            'ins': '---'
         })
         self.W = self.Reg(**{
             icode: INOP,
@@ -74,6 +77,7 @@ class PipeReg:
             dstM: ZERO,
             valM: ZERO,
             valE: ZERO,
+            'ins': '---'
         })
 
         

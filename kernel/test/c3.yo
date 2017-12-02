@@ -1,0 +1,5 @@
+0x000: 30f400010000 | init:	irmovl Stack, %esp  	# Set up stack pointer  
+0x006: 30f500010000 | 	irmovl Stack, %ebp  	# Set up base pointer  
+0x00c: 30f004000000 | 	irmovl $4,%eax
+0x012: a00f         | 	pushl %eax		# Push 4
+0x014: 00

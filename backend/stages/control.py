@@ -28,46 +28,34 @@ def update(cur, nxt):
     print(status)
 
     if F_stall:
-        nxt.F = cur.F
+        nxt.F.__dict__.update(**cur.F.__dict__)
     if D_stall:
-        nxt.D = cur.D
+        nxt.D.__dict__.update(**cur.D.__dict__)
     if W_stall:
-        nxt.W = cur.W
+        nxt.W.__dict__.update(**cur.W.__dict__)
     if D_bubble:
-        nxt.D = cur.Reg(**{
+        nxt.D.__dict__.update(**{
             'stat': SBUB,
             'icode': INOP,
             'ifun': FNONE,
-            'rA': RNONE,
-            'rB': RNONE,
-            'valC': ZERO,
-            'valP': ZERO,
-            'ins': '---'
         })
     if E_bubble:
-        nxt.E = cur.Reg(**{
+        nxt.E.__dict__.update(**{
             'stat': SBUB,
             'icode': INOP,
             'ifun': FNONE,
-            'valC': ZERO,
-            'valA': ZERO,
-            'valB': ZERO,
             'dstE': RNONE,
             'dstM': RNONE,
             'srcA': RNONE,
             'srcB': RNONE,
-            'ins': '---'
         })
     if M_bubble:
-        nxt.M = cur.Reg(**{
+        nxt.M.__dict__.update(**{
             'stat': SBUB,
             'icode': INOP,
-            'valA': ZERO,
-            'valE': ZERO,
             'Cnd': False,
             'dstM': RNONE,
             'dstE': RNONE,
-            'ins': '---'
         })
     cur.F = nxt.F
     cur.D = nxt.D

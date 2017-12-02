@@ -1,11 +1,16 @@
 """
-所有的流水线寄存器.
+所有的流水线寄存器. 与reg, mem一同构成programmer visible state
+所有的流水线寄存器都有:
+1. ins 表示这个寄存器中存的是哪句指令, 为mem中的地址
+2. icode
+3. ifun
 """
 from const import *
 
 ZF = 'ZF'
 SF = 'SF'
 OF = 'OF'
+ins = 'ins'
 predPC = 'predPC'
 stall = 'stall'
 bubble = 'bubble'
@@ -35,49 +40,50 @@ class PipeReg:
             self.__dict__.update(entries)
     def __init__(self):
         self.F = self.Reg(**{
+            ins: VNONE,
             predPC: ZERO
         })
         self.D = self.Reg(**{
+            ins: VNONE,
             stat: SBUB,
             icode: INOP,
             ifun: FNONE,
             rA: RNONE,
             rB: RNONE,
-            valC: ZERO,
-            valP: ZERO,
-            'ins': '---'
+            valC: VNONE,
+            valP: VNONE,
         })
         self.E = self.Reg(**{
+            ins: VNONE,
             stat: SBUB,
             icode: INOP,
             ifun: FNONE,
-            valC: ZERO,
-            valA: ZERO,
-            valB: ZERO,
+            valC: VNONE,
+            valA: VNONE,
+            valB: VNONE,
             dstE: RNONE,
             dstM: RNONE,
             srcA: RNONE,
             srcB: RNONE,
-            'ins': '---'
         })
         self.M = self.Reg(**{
+            ins: VNONE,
             stat: SBUB,
             icode: INOP,
-            valA: ZERO,
-            valE: ZERO,
             Cnd: False,
+            valA: VNONE,
+            valE: VNONE,
             dstM: RNONE,
             dstE: RNONE,
-            'ins': '---'
         })
         self.W = self.Reg(**{
-            icode: INOP,
+            ins: VNONE,
             stat: SBUB,
-            dstE: ZERO,
-            dstM: ZERO,
-            valM: ZERO,
-            valE: ZERO,
-            'ins': '---'
+            icode: INOP,            
+            dstE: RNONE,
+            dstM: RNONE,
+            valM: VNONE,
+            valE: VNONE,
         })
 
         

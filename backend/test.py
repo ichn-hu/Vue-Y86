@@ -1,12 +1,11 @@
-from stages.execute import aluAdd, aluAnd, aluSub, aluXor
+class A:
+    pass
 
-class CC:
-    def __init__(self):
-        CC.ZF = None
-        CC.SF = None
-        CC.OF = None
-
-a = "0f0f0f0f"
-b = "f0f0f0f0"
-c = aluAdd(a, b, True, CC)
-print(c, CC.ZF, CC.SF, CC.OF)
+a = A()
+a.__dict__.update(**{
+    'a': [1, 2, 3]
+})
+print(a.a[1:3])
+b = {'b': [2, 3, 4]}
+a.__dict__.update(**b)
+print(a.b[0:3])

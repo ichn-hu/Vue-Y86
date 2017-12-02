@@ -6,7 +6,7 @@ class Register:
     def read(self, srcA, srcB):
         srcA = int(srcA)
         srcB = int(srcB)
-        valA, valB = None, None
+        valA, valB = VNONE, VNONE
         if srcA != 0xf:
             valA = self.reg[srcA]
         if srcB != 0xf:

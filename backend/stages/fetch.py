@@ -1,16 +1,19 @@
 from const import *
-from misc import swichEndian, split2chunks, toInteger, int16
+from misc import swichEndian, split2chunks, toInteger, int16, disassemble
 import sys
 
 def fetch(cur, nxt, mem):
-    pc = cur.F.predPC
-
+    op = []
     if cur.M.icode in [IJXX] and not cur.M.Cnd:
         pc = cur.M.valA
-        # 这里的valA就是IJXX在decode时的valP
+        op.append('Select current PC {0} due to previous JMP misprediction'.format(swichEndian(pc)))
     elif cur.W.icode in [IRET]:
         pc = cur.W.valM
-
+        op.append('Select current PC {0} due to previous RET'.format(swichEndian(pc)))
+    else:
+        pc = cur.F.predPC
+        op.append('Select current PC {0} naturally'.format(swichEndian(pc)))
+    
     imem_error = False
     try:
         icode, ifun = split2chunks(mem.read(toInteger(pc), 1), 1)
@@ -31,7 +34,7 @@ def fetch(cur, nxt, mem):
     valP = swichEndian(hex(toInteger(pc) + 1
                            + 1 * int(need_regid)
                            + 4 * int(need_valC)))
-    valC = None
+    valC = VNONE
     if need_valC:
         try:
             valC = mem.read(toInteger(pc) +
@@ -50,19 +53,32 @@ def fetch(cur, nxt, mem):
 
     if imem_error:
         stat = SADR
+        op.append('Error: memory address invalid')
     elif not instr_valid:
         stat = SINS
+        op.append('Error: instruction invalid')
     elif icode == IHALT:
         stat = SHLT
+        op.append('Halt')
     else:
         stat = SAOK
 
+
     if icode in [IJXX, ICALL]:
         predPC = valC
+        op.append('Select next PC {0} due to JMP or CALL'.format(swichEndian(predPC)))
     else:
         predPC = valP
-    #print(predPC)
-    nxt.D = nxt.Reg(**{
+        op.append('Select next PC {0} naturally'.format(swichEndian(predPC)))
+
+    ins = VNONE
+    if stat in [SAOK, SHLT]:
+        ins = swichEndian(pc) + ': ' + disassemble(icode, ifun, rA, rB, valC)
+    cur.F.__dict__.update(**{
+        'ins': ins,
+        'operation': op
+    })
+    nxt.D.__dict__.update(**{
         'icode': icode,
         'ifun': ifun,
         'stat': stat,
@@ -70,9 +86,9 @@ def fetch(cur, nxt, mem):
         'rB': rB,
         'valC': valC,
         'valP': valP,
-        'ins': pc
+        'ins': ins
     })
-    nxt.F = cur.Reg(**{
+    nxt.F.__dict__.update(**{
         'predPC': predPC
     })
     #sys.exit(str(nxt.F.predPC))

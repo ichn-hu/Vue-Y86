@@ -131,6 +131,9 @@ def aluXor(a, b, c, cc):
 
 
 def execute(cur, nxt, cc):
+    op = []
+
+    need_calc = cur.E.icode in [IOPL, IPOPL, IPUSHL, ICALL, IRMMOVL, IMRMOVL]
 
     aluA = ZERO
     if cur.E.icode in [IRRMOVL, IOPL]:
@@ -141,11 +144,15 @@ def execute(cur, nxt, cc):
         aluA = NEGFOUR
     elif cur.E.icode in [IRET, IPOPL]:
         aluA = FOUR
+    
+    op.append('Set aluA to {0}'.format(swichEndian(aluA)))
 
     aluB = ZERO
     if cur.E.icode in [IRMMOVL, IMRMOVL, IOPL, ICALL,
                        IPUSHL, IRET, IPOPL]:
         aluB = cur.E.valB
+
+    op.append('Set aluA to {0}'.format(swichEndian(aluB)))
 
     if cur.E.icode in [IOPL]:
         aluFun = int(cur.E.ifun)
@@ -156,14 +163,25 @@ def execute(cur, nxt, cc):
         nxt.W.stat not in [SADR, SINS, SHLT] and \
         cur.W.stat not in [SADR, SINS, SHLT] else False
 
+    if set_cc:
+        op.append('Set condition code')
+
+
     if aluFun == AADD:
         valE = aluAdd(aluA, aluB, set_cc, cc)
+        op.append('Computed summation equals to  {0}'.format(swichEndian(valE)))
     elif aluFun == ASUB:
         valE = aluSub(aluB, aluA, set_cc, cc)
+        op.append('Computed difference equals to  {0}'.format(swichEndian(valE)))
     elif aluFun == AAND:
         valE = aluAnd(aluA, aluB, set_cc, cc)
+        op.append('Computed bitwise and equals to  {0}'.format(swichEndian(valE)))
     else:
         valE = aluXor(aluA, aluB, set_cc, cc)
+        op.append('Computed bitwise xor equals to {0}'.format(swichEndian(valE)))
+
+    if not need_calc:
+        op = []
 
     Cnd = False
     if cur.E.icode in [IJXX, IRRMOVL]:
@@ -181,8 +199,14 @@ def execute(cur, nxt, cc):
             Cnd = True
         elif cur.E.ifun in [CJG] and not ((cc.SF ^ cc.OF) | cc.ZF):
             Cnd = True
+        op.append('Condition holds' if Cnd else 'Condition fails')
 
-    nxt.M = cur.Reg(**{
+    cur.E.__dict__.update(**{
+        'operation': op
+    })
+
+    nxt.M.__dict__.update(**{
+        'ins': cur.E.ins,
         'stat': cur.E.stat,
         'icode': cur.E.icode,
         'Cnd': Cnd,
@@ -190,7 +214,6 @@ def execute(cur, nxt, cc):
         'valA': cur.E.valA,
         'dstM': cur.E.dstM,
         'dstE': RNONE if cur.E.icode in [IRRMOVL] and not Cnd else cur.E.dstE,
-        'ins': cur.E.ins
     })
 
 

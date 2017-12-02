@@ -47,9 +47,6 @@ def run():
         execute(cur, nxt, cc)
         decode(cur, nxt, reg)
         fetch(cur, nxt, mem)
-        #print(nxt.F.predPC)
-        update(cur, nxt)
-        #sys.exit(str(cur.F.predPC))
         info = {}
         info['F'] = cur.F.__dict__
         info['D'] = cur.D.__dict__
@@ -57,7 +54,11 @@ def run():
         info['M'] = cur.M.__dict__
         info['W'] = cur.W.__dict__
         info['reg'] = reg.info()
-        clock += 1
+        info['cc'] = cc.__dict__
         ret[clock] = info
         
+        update(cur, nxt)
+        clock += 1
+        
+    ret['Stat'] = ss.stat
     return ret

@@ -1,3 +1,5 @@
+from const import *
+
 def split2chunks(s, l):
     return [s[i : i + l] for i in range(0, len(s), l)]
 
@@ -51,5 +53,24 @@ def aluXor(a, b, c, cc):
 def d2h(d):
     return "0123456789abcdef"[int(d)]
 
+def disassemble(icode, ifun, rA, rB, valC):
+    ins = d2h(icode) + d2h(ifun)
+    ret = instrName[ins]
+    if icode in [IRRMOVL, IOPL]:
+        ret += ' %s, %s' % (regName[rA], regName[rB])
+    elif icode in [IIRMOVL]:
+        ret += ' %s, %s' % (swichEndian(valC), regName[rB])
+    elif icode in [IRMMOVL]:
+        ret += ' %s, %s(%s)' % (regName[rA], str(toInteger(valC)), regName[rB])
+    elif icode in [IMRMOVL]:
+        ret += ' %s(%s), %s' % (str(toInteger(valC)), regName[rB], regName[rA])
+    elif icode in [IJXX, ICALL]:
+        ret += ' %s' % (swichEndian(valC))
+    elif icode in [IPOPL, IPUSHL]:
+        ret += ' %s' % (regName[rA])
+    return ret
+
+
 if __name__ == "__main__":
-    print(swichEndian("bbccddeeff"))
+    print(disassemble(IMRMOVL, 0, 0, 0, 1, 2, '30303333'))
+

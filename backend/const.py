@@ -3,8 +3,8 @@
 这些值将出现在pipeline register中. 具体定义参见csapp2e, Figure 4.26 Constant values used in HCL descriptions.
 此外, 补充定义IIADDL, ILEAVE, REBP, 以提供对指令iaddl和leave的支持.
 """
-INOP = 0x0    # Code for nop instruction
-IHALT = 0x1   # Code for halt instruction
+IHALT = 0x0   # Code for halt instruction
+INOP = 0x1    # Code for nop instruction
 IRRMOVL = 0x2  # Code for rrmovl instruction
 IIRMOVL = 0x3  # Code for irmovl instruction
 IRMMOVL = 0x4  # Code for rmmovl instruction
@@ -26,17 +26,7 @@ RESI = 0x6    # Register ID for %esi
 REDI = 0x7    # Register ID for %edi
 RNONE = 0xF   # Indicates no register file access
 
-regName = {
-    0: 'eax',
-    1: 'ecx',
-    2: 'edx',
-    3: 'ebx',
-    4: 'esp',
-    5: 'ebp',
-    6: 'esi',
-    7: 'edi',
-    0xf: 'fnone'
-}
+
 
 ALUADD = 0x0  # Function for addition operation
 SAOK = 0x1    # Status code for normal operation
@@ -64,6 +54,61 @@ AADD = 0x0
 ASUB = 0x1
 AAND = 0x2
 AXOR = 0x4
+VNONE = '---'
 
 MAXCLOCK = 100
 MEMSIZE = 1 << 12
+
+regName = {
+    0: '%eax',
+    1: '%ecx',
+    2: '%edx',
+    3: '%ebx',
+    4: '%esp',
+    5: '%ebp',
+    6: '%esi',
+    7: '%edi',
+    0xf: 'null',
+    '0': '%eax',
+    '1': '%ecx',
+    '2': '%edx',
+    '3': '%ebx',
+    '4': '%esp',
+    '5': '%ebp',
+    '6': '%esi',
+    '7': '%edi',
+    'f': 'null',
+    'F': 'null'
+}
+
+instrName = {
+    "00": "halt",
+    "10": "nop",    
+    "20": "rrmovl",
+    "21": "cmovle",
+    "22": "cmovl",
+    "23": "cmove",
+    "24": "cmovne",
+    "25": "cmovge",
+    "26": "cmovg",
+    "30": "irmovl",
+    "40": "rmmovl",
+    "50": "mrmovl",
+    "60": "addl",
+    "61": "subl",
+    "62": "andl",
+    "63": "xorl",
+    "70": "jmp",
+    "71": "jle",
+    "72": "jl",
+    "73": "je",
+    "74": "jne",
+    "75": "jge",
+    "76": "jg",
+    "80": "call",
+    "90": "ret",
+    "a0": "pushl",
+    "b0": "popl",
+    "c0": "iaddl",
+    "d0": "leave"
+}

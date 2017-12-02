@@ -7,13 +7,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def show():
-    return open('./frontend/experiment/get-data/index.html', 'r').read()
+    return open('./index.html', 'r').read()
 
 @app.route("/upload", methods=['POST', 'GET'])
 def run():
     instrCode = request.form.get('instrCode')
     result = runner.runInstrCode(instrCode)
-    return json.dumps(instrCode)
+    dump = json.dumps(result)
+    print(len(dump))
+    return dump
 
 if __name__ == "__main__":
     app.run(port=8080)

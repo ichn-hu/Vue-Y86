@@ -56,9 +56,9 @@ def run():
         info['reg'] = reg.info()
         info['mem'] = mem.info()
         info['cc'] = cc.__dict__
+        info['control'] = update(cur, nxt)
+
         ret[clock] = info
-        
-        update(cur, nxt)
         clock += 1
         
     ret['Stat'] = ss.stat

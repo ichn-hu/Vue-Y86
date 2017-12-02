@@ -56,7 +56,7 @@ AAND = 0x2
 AXOR = 0x4
 VNONE = '---'
 
-MAXCLOCK = 100
+MAXCLOCK = 1000
 MEMSIZE = 1 << 12
 
 regName = {

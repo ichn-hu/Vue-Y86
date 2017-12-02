@@ -1,5 +1,5 @@
-from const import *
-from misc import swichEndian, split2chunks, toInteger, int16, disassemble
+from kernel.const import *
+from kernel.misc import swichEndian, split2chunks, toInteger, int16, disassemble
 import sys
 
 def fetch(cur, nxt, mem):

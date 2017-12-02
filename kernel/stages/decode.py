@@ -1,5 +1,5 @@
-from const import *
-from misc import swichEndian, split2chunks
+from kernel.const import *
+from kernel.misc import swichEndian, split2chunks
 
 
 def decode(cur, nxt, reg):

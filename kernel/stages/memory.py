@@ -1,5 +1,5 @@
-from const import *
-from misc import toInteger, swichEndian
+from kernel.const import *
+from kernel.misc import toInteger, swichEndian
 
 
 def memory(cur, nxt, mem):

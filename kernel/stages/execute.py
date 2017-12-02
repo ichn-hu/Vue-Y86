@@ -1,5 +1,5 @@
-from const import *
-from misc import swichEndian, split2chunks, d2h, toInteger
+from kernel.const import *
+from kernel.misc import swichEndian, split2chunks, d2h, toInteger
 
 def toBinaryList(val):
     """

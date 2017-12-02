@@ -1,5 +1,5 @@
-from const import *
-from misc import swichEndian
+from kernel.const import *
+from kernel.misc import swichEndian
 
 def writeback(cur, nxt, reg, ss):
     ss.stat = SAOK if cur.W.stat in [SBUB] else cur.W.stat

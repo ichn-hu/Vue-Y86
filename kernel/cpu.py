@@ -54,6 +54,7 @@ def run():
         info['M'] = cur.M.__dict__
         info['W'] = cur.W.__dict__
         info['reg'] = reg.info()
+        info['mem'] = mem.info()
         info['cc'] = cc.__dict__
         ret[clock] = info
         

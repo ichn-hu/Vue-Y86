@@ -1,4 +1,4 @@
-from const import *
+from kernel.const import *
 
 
 def update(cur, nxt):
@@ -25,7 +25,7 @@ def update(cur, nxt):
         'M_bubble': M_bubble,
         'W_stall': W_stall
     }
-    print(status)
+    #print(status)
 
     if F_stall:
         nxt.F.__dict__.update(**cur.F.__dict__)
@@ -62,3 +62,4 @@ def update(cur, nxt):
     cur.E = nxt.E
     cur.M = nxt.M
     cur.W = nxt.W
+    return status

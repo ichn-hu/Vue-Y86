@@ -1,5 +1,5 @@
-from const import *
-from misc import swichEndian
+from kernel.const import *
+from kernel.misc import swichEndian
 class Register:
     def __init__(self):
         self.reg = ["00" * 4] * 8

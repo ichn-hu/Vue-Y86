@@ -5,7 +5,7 @@
 2. icode
 3. ifun
 """
-from const import *
+from kernel.const import *
 
 ZF = 'ZF'
 SF = 'SF'

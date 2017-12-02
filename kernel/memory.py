@@ -1,5 +1,5 @@
-from misc import split2chunks
-from const import MEMSIZE
+from kernel.misc import split2chunks
+from kernel.const import MEMSIZE
 import re
 
 

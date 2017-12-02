@@ -34,7 +34,7 @@
                     $.post('/upload', {'instrCode': e.target.result},
                         function(result) {
                             console.log(result)
-                        }
+                        }, 'json'
                     ).done(function() {
                     });
                 };

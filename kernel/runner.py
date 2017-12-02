@@ -2,7 +2,12 @@ import os
 import io
 import json, pprint
 
-import cpu
+import kernel.cpu as cpu
+
+def runInstrCode(strCode):
+    cpu.init(io.StringIO(strCode))
+    return cpu.run()
+
 if __name__ == "__main__":
     os.chdir("C:\\Users\\ichne\\Documents\\Vue-Y86\\backend\\test")
     c1 = io.StringIO(open("sample.yo", "r").read())

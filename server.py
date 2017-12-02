@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask import jsonify
 import pprint
+from kernel import runner
 app = Flask(__name__)
 
 @app.route('/')
@@ -9,10 +10,9 @@ def show():
 
 @app.route("/upload", methods=['POST', 'GET'])
 def run():
-    instrCode = request.__dict__
-    pp = pprint.PrettyPrinter()
-    pp.pprint(instrCode)
-    return 'ok'
+    instrCode = request.form.get('instrCode')
+    result = runner.runInstrCode(instrCode)
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(port=8080)

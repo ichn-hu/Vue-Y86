@@ -4,18 +4,18 @@ CPU implemention, including all the control logics
 
 import sys
 
-import pipe
-from memory import Memory
-from misc import split2chunks, swichEndian
-from pipe import PipeReg
-from register import Register
-from const import *
-from stages.fetch import fetch
-from stages.memory import memory
-from stages.decode import decode
-from stages.execute  import execute
-from stages.writeback import writeback
-from stages.control import update
+import kernel.pipe as pip
+from kernel.memory import Memory
+from kernel.misc import split2chunks, swichEndian
+from kernel.pipe import PipeReg
+from kernel.register import Register
+from kernel.const import *
+from kernel.stages.fetch import fetch
+from kernel.stages.memory import memory
+from kernel.stages.decode import decode
+from kernel.stages.execute  import execute
+from kernel.stages.writeback import writeback
+from kernel.stages.control import update
 
 reg, mem = None, None
 

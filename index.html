@@ -21,6 +21,7 @@
             background-size: cover;
             z-index: 100;
         }
+
         #showResult {
             position: fixed;
             width: 100%;
@@ -158,7 +159,7 @@
                 <div id="resultBackground">
 
                 </div>
-                <v-container grid-list-md text-xs-center id="dataPanel" :class="{'elevation-7': !clicked, 'elevation-14': clicked}" @click="clicked = !clicked">
+                <!-- <v-container grid-list-md text-xs-center id="dataPanel" :class="{'elevation-7': !clicked, 'elevation-14': clicked}" @click="clicked = !clicked">
                     <v-layout row wrap>
                         <v-flex d-flex md1>
                             <v-layout row wrap>
@@ -177,13 +178,58 @@
                     </v-layout>
                 </v-container>
 
-                <button @click="renderNext">
-                    render next
-                </button>
-                <button @click="renderPrevious">
-                    render previous
-                </button>
-
+                 -->
+                <v-navigation-drawer v-model="primaryDrawer.model" :permanent="primaryDrawer.type === 'permanent'" :temporary="primaryDrawer.type === 'temporary'"
+                    :clipped="primaryDrawer.clipped" :floating="primaryDrawer.floating" :mini-variant="primaryDrawer.mini" absolute
+                    overflow app>
+                </v-navigation-drawer>
+                <v-toolbar app absolute :clipped-left="primaryDrawer.clipped">
+                    <v-toolbar-side-icon @click.stop="primaryDrawer.model = !primaryDrawer.model" v-if="primaryDrawer.type !== 'permanent'"></v-toolbar-side-icon>
+                    <v-toolbar-title>Modern Y86 Simulator</v-toolbar-title>
+                </v-toolbar>
+                <v-content>
+                    <v-container fluid>
+                        <v-layout align-center justify-center>
+                            <v-flex xs10>
+                                <v-card>
+                                    <v-card-text>
+                                        <v-layout row wrap>
+                                            <v-flex xs12 md6>
+                                                <span>Scheme</span>
+                                                <v-switch primary label="Dark" v-model="dark"></v-switch>
+                                            </v-flex>
+                                            <v-flex xs12 md6>
+                                                <span>Drawer</span>
+                                                <v-radio-group v-model="primaryDrawer.type" column>
+                                                    <v-radio v-for="drawer in drawers" :key="drawer" primary :label="drawer" :value="drawer.toLowerCase()"></v-radio>
+                                                </v-radio-group>
+                                                <v-switch label="Clipped" v-model="primaryDrawer.clipped" primary></v-switch>
+                                                <v-switch label="Floating" v-model="primaryDrawer.floating" primary></v-switch>
+                                                <v-switch label="Mini" v-model="primaryDrawer.mini" primary></v-switch>
+                                            </v-flex>
+                                            <v-flex xs12 md6>
+                                                <span>Footer</span>
+                                                <v-switch label="Fixed" v-model="footer.fixed" primary></v-switch>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn @click="renderNext">
+                                            render next
+                                        </v-btn>
+                                        <v-btn @click="renderPrevious">
+                                            render previous
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-content>
+                <v-footer :fixed="footer.fixed" app>
+                    <span>&copy; {{ new Date().getFullYear() }}</span>
+                </v-footer>
                 <!-- <v-container grid-list-md text-xs-center fluid grid-list-md>
                     <v-layout row wrap>
                         <v-flex xs1 v-for="(val, name) in Control" :name="name" :val="val">
@@ -270,6 +316,18 @@
                 WriteBack: {},
                 Control: {},
                 clicked: false,
+
+                dark: true,
+                drawers: ['Permanent', 'Persistent', 'Temporary'],
+                primaryDrawer: {
+                    model: null,
+                    type: 'persistent',
+                    clipped: false,
+                    floating: false,
+                    mini: false
+                }, footer: {
+                    fixed: false
+                }
             },
             methods: {
                 getRegName: function (id) {

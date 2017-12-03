@@ -8,8 +8,19 @@
     <title>Y86 Sim</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
     <style>
+        @font-face {
+            font-family: 'modeno';
+            src: url('/static/modeno.ttf');
+        }
+
+        @font-face {
+            font-family: 'Inconsolata';
+            src: url('/static/Inconsolata.otf');
+        }
+
         html {
             overflow: hidden;
         }
@@ -62,8 +73,8 @@
             min-width: 100%;
             min-height: 100%;
             z-index: -100;
-            /* background: url('/static/bkgd.gif') no-repeat; */
-            background: url('/static/bg2.jpeg') no-repeat;
+            background: url('/static/bkgd.gif') no-repeat;
+            /* background: url('/static/bg2.jpeg') no-repeat; */
             background-position: center;
             background-size: cover;
             -webkit-filter: blur(5px);
@@ -100,7 +111,7 @@
             border-radius: 3px;
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
             font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-            top: 20%;
+            top: 10%;
             left: 10%;
             right: 10%;
             position: fixed;
@@ -123,103 +134,156 @@
             position: relative;
             top: 10px;
             text-align: center;
-            color: green;
+            font-size: 50px;
+            font-family: 'modeno'
+        }
+
+        .m-card {
+            height: 40px;
+            display: block;
+            text-align: center;
+        }
+
+        .m-card-title {
+            height: 20px;
+            font-family: 'Inconsolata';
+        }
+
+        .m-card-value {
+            font-weight: bold;
+            font-family: 'Inconsolata';
         }
     </style>
 </head>
 
 <body>
     <div id="y-86">
-        <v-app light>
+        <v-app dark>
 
             <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect" v-if="uploadAllowed">
                 <div id="dropBackground">
-                    <!-- <div class="vb">
-                        <video src="/static/bvideo.mp4" autoplay loop volume="0"></video>
-                    </div> -->
+
 
                 </div>
-                <p id="welcomeTitle" class="elevation-7">
-                    <h1>
-                        The Modern Y86 Simulator
-                    </h1>
-                </p>
-                <v-container grid-list-md text-xs-center id="welcomePanel" :class="{'elevation-7': !clicked, 'elevation-14': clicked}" @click="clicked = !clicked">
+                <v-container grid-list-md text-xs-center id="welcomePanel">
                     <v-layout row wrap>
-                        <v-flex xs12>
-                            <v-card dark color="primary">
-                                <v-card-text class="px-0">12</v-card-text>
+                        <v-flex xs6 offset-xs3>
+                            <v-card>
+                                <v-card-text>
+                                    <h1>
+                                        The Modern Y86 Simulator
+                                    </h1>
+                                </v-card-text>
                             </v-card>
                         </v-flex>
                     </v-layout>
                 </v-container>
+
             </div>
 
             <div id="showResult" v-if="!uploadAllowed">
                 <div id="resultBackground">
 
                 </div>
-                <!-- <v-container grid-list-md text-xs-center id="dataPanel" :class="{'elevation-7': !clicked, 'elevation-14': clicked}" @click="clicked = !clicked">
-                    <v-layout row wrap>
-                        <v-flex d-flex md1>
-                            <v-layout row wrap>
-                                <v-flex d-flex>
-                                    <v-layout row wrap>
-                                        <v-flex d-flex v-for="(val, name) in cur.reg" :name="name" :val="val" xs12>
-                                            <v-card>
-                                                {{ name }}: {{ val }}
-                                            </v-card>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-flex>
-                            </v-layout>
-                        </v-flex>
 
-                    </v-layout>
-                </v-container>
-
-                 -->
                 <v-navigation-drawer v-model="primaryDrawer.model" :permanent="primaryDrawer.type === 'permanent'" :temporary="primaryDrawer.type === 'temporary'"
-                    :clipped="primaryDrawer.clipped" :floating="primaryDrawer.floating" :mini-variant="primaryDrawer.mini" absolute
-                    overflow app>
-                </v-navigation-drawer>
-                <v-toolbar app absolute :clipped-left="primaryDrawer.clipped">
-                    <v-toolbar-side-icon @click.stop="primaryDrawer.model = !primaryDrawer.model" v-if="primaryDrawer.type !== 'permanent'"></v-toolbar-side-icon>
-                    <v-toolbar-title>Modern Y86 Simulator</v-toolbar-title>
-                </v-toolbar>
-                <v-content>
-                    <v-container fluid>
-                        <v-layout align-center justify-center>
-                            <v-flex xs10>
-                                <v-card>
-                                    <v-card-text>
+                    :clipped="primaryDrawer.clipped" :floating="primaryDrawer.floating" :mini-variant="primaryDrawer.mini" fixed
+                    overflow app style="background: rgba(255, 255, 255, 0.35);box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);">
+
+                    <v-container grid-list-md text-xs-center>
+                        <v-layout row>
+                            <v-flex xs4 class="my-1">
+                                <v-card  tile >
+                                    <m-card title="ZF" :value="cur.cc.ZF">
+                                    </m-card>
+                                </v-card>
+                            </v-flex>
+                            <v-flex xs4 class="my-1">
+                                <v-card  tile >
+                                    <m-card title="SF" :value="cur.cc.SF">
+                                    </m-card>
+                                </v-card>
+                            </v-flex>
+                            <v-flex xs4 class="my-1">
+                                <v-card  tile >
+                                    <m-card title="OF" :value="cur.cc.OF">
+                                    </m-card>
+                                </v-card>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                    <v-container>
+                        <v-layout row wrap>
+
+                            <v-flex d-flex xs6>
+                                <v-layout row wrap>
+                                    <v-flex d-flex>
                                         <v-layout row wrap>
-                                            <v-flex xs12 md6>
-                                                <span>Scheme</span>
-                                                <v-switch primary label="Dark" v-model="dark"></v-switch>
-                                            </v-flex>
-                                            <v-flex xs12 md6>
-                                                <span>Drawer</span>
-                                                <v-radio-group v-model="primaryDrawer.type" column>
-                                                    <v-radio v-for="drawer in drawers" :key="drawer" primary :label="drawer" :value="drawer.toLowerCase()"></v-radio>
-                                                </v-radio-group>
-                                                <v-switch label="Clipped" v-model="primaryDrawer.clipped" primary></v-switch>
-                                                <v-switch label="Floating" v-model="primaryDrawer.floating" primary></v-switch>
-                                                <v-switch label="Mini" v-model="primaryDrawer.mini" primary></v-switch>
-                                            </v-flex>
-                                            <v-flex xs12 md6>
-                                                <span>Footer</span>
-                                                <v-switch label="Fixed" v-model="footer.fixed" primary></v-switch>
+                                            <v-flex d-flex v-for="(val, name) in cur.reg" :name="name" :val="val" xs12>
+                                                <m-card :title="name" :value="val">
+                                                </m-card>
                                             </v-flex>
                                         </v-layout>
-                                    </v-card-text>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
+                            <v-flex d-flex xs6>
+                                <v-layout row wrap>
+                                    <v-flex d-flex>
+                                        <v-layout row wrap>
+                                            <v-flex d-flex v-for="(val, name) in cur.mem" :name="name" :val="val" xs12>
+                                                <m-card :title="name" :value="val">
+                                                </m-card>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
+
+                        </v-layout>
+                    </v-container>
+                </v-navigation-drawer>
+
+                <v-toolbar app absolute :clipped-left="primaryDrawer.clipped">
+                    <v-toolbar-side-icon @click.stop="primaryDrawer.model = !primaryDrawer.model" v-if="primaryDrawer.type !== 'permanent'"></v-toolbar-side-icon>
+                    <v-toolbar-title style="font-family: 'modeno'">The Modern Y86 Simulator</v-toolbar-title>
+                </v-toolbar>
+                <v-content>
+                    <v-container grid-list-xl text-xs-center>
+                        <v-layout align-center justify-center>
+                            <v-flex xs12>
+                                <v-card>
+                                    <m-writeback v-bind="cur.W"></m-writeback>
+                                    <m-memory v-bind="cur.M"></m-memory>
+                                    <m-execute v-bind="cur.E"></m-execute>
+                                    <m-decode v-bind="cur.D"></m-decode>
+                                    <m-fetch v-bind="cur.F"></m-fetch>
                                     <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn @click="renderNext">
-                                            render next
+                                        <v-btn :cyc="cyc">
+                                            <v-icon medium left>
+                                                fa-clock-o
+                                            </v-icon>
+                                            {{ cyc }}
                                         </v-btn>
-                                        <v-btn @click="renderPrevious">
-                                            render previous
+                                        <v-spacer></v-spacer>
+                                        <v-btn @click.stop="renderInit">
+                                            <v-icon>
+                                                refresh
+                                            </v-icon>
+                                        </v-btn>
+                                        <v-btn @click.stop="renderPrevious">
+                                            <v-icon>fa-backward</v-icon>
+                                        </v-btn>
+                                        <v-btn @click.stop="changeStatus">
+                                            <v-icon v-if="stopped">
+                                                fa-play
+                                            </v-icon>
+                                            <v-icon v-if="!stopped">
+                                                fa-pause
+                                            </v-icon>
+                                        </v-btn>
+                                        <v-btn @click.stop="renderNext">
+                                            <v-icon>fa-forward</v-icon>
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -227,59 +291,6 @@
                         </v-layout>
                     </v-container>
                 </v-content>
-                <v-footer :fixed="footer.fixed" app>
-                    <span>&copy; {{ new Date().getFullYear() }}</span>
-                </v-footer>
-                <!-- <v-container grid-list-md text-xs-center fluid grid-list-md>
-                    <v-layout row wrap>
-                        <v-flex xs1 v-for="(val, name) in Control" :name="name" :val="val">
-                            <v-card>
-                                <h4>{{ name }}</h4>
-                                {{ val }}
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs1 v-for="(val, name) in Fetch" :name="name" :val="val">
-                            <v-card>
-                                <h4>{{ name }}</h4>
-                                {{ val }}
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs1 v-for="(val, name) in Decode" :name="name" :val="val">
-                            <v-card>
-                                <h4>{{ name }}</h4>
-                                {{ val }}
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs1 v-for="(val, name) in Execute" :name="name" :val="val">
-                            <v-card>
-                                <h4>{{ name }}</h4>
-                                {{ val }}
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs1 v-for="(val, name) in Memory" :name="name" :val="val">
-                            <v-card>
-                                <h4>{{ name }}</h4>
-                                {{ val }}
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs1 v-for="(val, name) in WriteBack" :name="name" :val="val">
-                            <v-card>
-                                <h4>{{ name }}</h4>
-                                {{ val }}
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                </v-container> -->
             </div>
         </v-app>
 
@@ -288,35 +299,154 @@
     <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
     <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
 
-    <!-- components -->
+    <!-- templates -->
 
-    <!-- <template id="regCell">
-        {{ name }}: {{ value }}
-    </template> -->
+    <template id="template-m-card">
+        <div class="m-card">
+            <div class="m-card-title">
+                {{ title }}
+            </div>
+            <div class="m-card-value">
+                {{ value }}
+            </div>
+        </div>
+    </template>
+
+    <template id="template-m-fetch">
+        <v-layout row wrap class="elevation-4">
+            <v-flex xs2 offset-xs0 class="my-2">
+                <m-card :title="ins.addr" :value="ins.code"></m-card>
+            </v-flex>
+            <v-flex xs2 offset-xs2 class="elevation-5 my-2">
+                <m-card title="predPC" :value="predPC"></m-card>
+            </v-flex>
+        </v-layout>
+    </template>
+    <template id="template-m-decode">
+        <v-layout row wrap class="elevation-4">
+            <v-flex xs2 offset-xs0 class="my-2">
+                <m-card :title="ins.addr" :value="ins.code"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="rA" :value="rA"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="rB" :value="rB"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valC" :value="valC"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valP" :value="valP"></m-card>
+            </v-flex>
+        </v-layout>
+    </template>
+    <template id="template-m-execute">
+        <v-layout row wrap class="elevation-4">
+            <v-flex xs2 offset-xs0 class="my-2">
+                <m-card :title="ins.addr" :value="ins.code"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="valC" :value="valC"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valA" :value="valA"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valB" :value="valB"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="dstE" :value="dstE"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="dstM" :value="dstM"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="srcA" :value="srcA"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="srcA" :value="srcA"></m-card>
+            </v-flex>
+        </v-layout>
+    </template>
+    <template id="template-m-memory">
+        <v-layout row wrap class="elevation-4">
+            <v-flex xs2 offset-xs0 class="my-2">
+                <m-card :title="ins.addr" :value="ins.code"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="Cnd" :value="Cnd"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valE" :value="valE"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valA" :value="valA"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="dstE" :value="dstE"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="dstM" :value="dstM"></m-card>
+            </v-flex>
+        </v-layout>
+    </template>
+    <template id="template-m-writeback">
+        <v-layout row wrap class="elevation-4">
+            <v-flex xs2 offset-xs0 class="my-2">
+                <m-card :title="ins.addr" :value="ins.code"></m-card>
+            </v-flex>
+            <v-flex xs1 class=" mx-1"></v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valE" :value="valE"></m-card>
+            </v-flex>
+            <v-flex xs2 class="elevation-5 my-2 mx-1">
+                <m-card title="valM" :value="valM"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="dstE" :value="dstE"></m-card>
+            </v-flex>
+            <v-flex xs1 class="elevation-5 my-2 mx-1">
+                <m-card title="dstM" :value="dstM"></m-card>
+            </v-flex>
+        </v-layout>
+    </template>
 
 
     <script>
-        // Vue.component('m-reg-cell', {
-        //     props: ['name', 'value'],
-        //     template: '#regCell'
-        // })
-        new Vue({
+        Vue.component('m-card', {
+            props: ['title', 'value'],
+            template: '#template-m-card',
+        });
+        Vue.component('m-fetch', {
+            props: ['stat', 'control', 'ins', 'operation', 'predPC'],
+            template: '#template-m-fetch'
+        });
+        Vue.component('m-decode', {
+            props: ['stat', 'control', 'ins', 'operation', 'rA', 'rB', 'valC', 'valP'],
+            template: '#template-m-decode'
+        });
+        Vue.component('m-execute', {
+            props: ['stat', 'control', 'ins', 'operation', 'valC', 'valA', 'valB', 'dstE', 'dstM', 'srcA', 'srcB'],
+            template: '#template-m-execute'
+        });
+        Vue.component('m-memory', {
+            props: ['stat', 'control', 'ins', 'operation', 'Cnd', 'valC', 'valE', 'valA', 'dstE', 'dstM'],
+            template: '#template-m-memory'
+        });
+        Vue.component('m-writeback', {
+            props: ['stat', 'control', 'ins', 'operation', 'Cnd', 'valE', 'valM', 'dstE', 'dstM'],
+            template: '#template-m-writeback'
+        });
+        myVue = new Vue({
             el: '#y-86',
             data: {
                 uploadAllowed: true,
                 result: null,
-                info: "you can not see me!",
                 cyc: -1,
                 cur: null,
-                regs: [],
-                Fetch: {},
-                Decode: {},
-                Execute: {},
-                Memory: {},
-                WriteBack: {},
-                Control: {},
-                clicked: false,
-
+                stopped: true,
+                freq: 10,
                 dark: true,
                 drawers: ['Permanent', 'Persistent', 'Temporary'],
                 primaryDrawer: {
@@ -332,16 +462,16 @@
             methods: {
                 getRegName: function (id) {
                     if (id > 7)
-                        return '%---';
+                        return '---';
                     return {
-                        0: '%eax',
-                        1: '%ecx',
-                        2: '%edx',
-                        3: '%ebx',
-                        4: '%esp',
-                        5: '%ebp',
-                        6: '%esi',
-                        7: '%edi',
+                        0: 'EAX',
+                        1: 'ECX',
+                        2: 'EDX',
+                        3: 'EBX',
+                        4: 'ESP',
+                        5: 'EBP',
+                        6: 'ESI',
+                        7: 'EDI',
                     }[id];
                 },
 
@@ -365,24 +495,99 @@
                                 }, 'json'
                             ).done(function () {
                                 self.uploadAllowed = false;
-                                self.renderNext();
+                                self.renderInit();
                             });
                         };
                         reader.readAsText(f);
                     }
                 },
+                switchEndian: function (val) {
+                    if (val === '---') {
+                        return '----------';
+                    }
+                    if (val === '----------')
+                        return val;
+                    return '0x' + val.slice(6, 8) + val.slice(4, 6)
+                        + val.slice(2, 4) + val.slice(0, 2);
+                },
                 renderReg: function () {
                 },
+                renderIns: function (ins) {
+                    if (typeof (ins) === "string") {
+                        addr = ins.slice(0, 8);
+                        code = ins.slice(9, ins.length);
+                        return { addr: addr, code: code };
+                    } else {
+                        return ins;
+                    }
+                },
+                renderThis: function () {
+                    this.cur.F.ins = this.renderIns(this.cur.F.ins);
+                    this.cur.D.ins = this.renderIns(this.cur.D.ins);
+                    this.cur.W.ins = this.renderIns(this.cur.W.ins);
+                    this.cur.E.ins = this.renderIns(this.cur.E.ins);
+                    this.cur.M.ins = this.renderIns(this.cur.M.ins);
+                    this.cur.F.predPC = this.switchEndian(this.cur.F.predPC);
+                    this.cur.D.valC = this.switchEndian(this.cur.D.valC);
+                    this.cur.D.valP = this.switchEndian(this.cur.D.valP);
+                    this.cur.E.valC = this.switchEndian(this.cur.E.valC);
+                    this.cur.E.valA = this.switchEndian(this.cur.E.valA);
+                    this.cur.E.valB = this.switchEndian(this.cur.E.valB);
+                    this.cur.M.valE = this.switchEndian(this.cur.M.valE);
+                    this.cur.M.valA = this.switchEndian(this.cur.M.valA);
+                    this.cur.W.valE = this.switchEndian(this.cur.W.valE);
+                    this.cur.W.valM = this.switchEndian(this.cur.W.valM);
+                    this.cur.D.rA = this.getRegName(this.cur.D.rA);
+                    this.cur.D.rB = this.getRegName(this.cur.D.rB);
+                    this.cur.E.dstE = this.getRegName(this.cur.E.dstE);
+                    this.cur.E.dstM = this.getRegName(this.cur.E.dstM);
+                    this.cur.E.srcA = this.getRegName(this.cur.E.srcA);
+                    this.cur.E.srcB = this.getRegName(this.cur.E.srcB);
+                    this.cur.M.dstE = this.getRegName(this.cur.M.dstE);
+                    this.cur.M.dstM = this.getRegName(this.cur.M.dstM);
+                    this.cur.W.dstE = this.getRegName(this.cur.W.dstE);
+                    this.cur.W.dstM = this.getRegName(this.cur.W.dstM);
+                },
                 renderNext: function () {
-                    this.cyc++;
-                    this.cur = this.result[this.cyc];
-                    console.log(this.cur.reg);
+                    console.log(this.result[this.cyc + 1]);
+                    if (this.result[this.cyc + 1] !== undefined) {
+                        this.cyc++;
+                        this.cur = this.result[this.cyc];
+                        console.log(this.cur.reg);
+                        this.renderThis();
+                        return true;
+                    }
+                    return false;
                 },
                 renderPrevious: function () {
-                    this.cyc--;
-                    this.cur = this.result[this.cyc];
-                    console.log(this.cur);
+                    if (this.result[this.cyc - 1] !== undefined) {
+                        this.cyc--;
+                        this.cur = this.result[this.cyc];
+                        console.log(this.cur);
+                        this.renderThis();
+                        return true;
+                    }
+                    return false;
                 },
+                renderInit: function () {
+                    console.log("render init");
+                    this.cyc = -1;
+                    this.renderNext();
+                },
+                runThis: function () {
+                    if (this.stopped)
+                        return;
+                    this.stopped = !this.renderNext();
+                    if (!this.stopped) {
+                        setTimeout(this.runThis, 1000 / this.freq);
+                    }
+                },
+                changeStatus: function () {
+                    this.stopped = !this.stopped;
+                    if (!this.stopped) {
+                        this.runThis();
+                    }
+                }
             }
         });
     </script>

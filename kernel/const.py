@@ -54,29 +54,29 @@ AADD = 0x0
 ASUB = 0x1
 AAND = 0x2
 AXOR = 0x4
-VNONE = '---'
+VNONE = '--------'
 
 MAXCLOCK = 1000
 MEMSIZE = 1 << 12
 
 regName = {
-    0: '%eax',
-    1: '%ecx',
-    2: '%edx',
-    3: '%ebx',
-    4: '%esp',
-    5: '%ebp',
-    6: '%esi',
-    7: '%edi',
+    0: '%EAX',
+    1: '%ECX',
+    2: '%EDX',
+    3: '%EBX',
+    4: '%ESP',
+    5: '%EBP',
+    6: '%ESI',
+    7: '%EDI',
     0xf: 'null',
-    '0': '%eax',
-    '1': '%ecx',
-    '2': '%edx',
-    '3': '%ebx',
-    '4': '%esp',
-    '5': '%ebp',
-    '6': '%esi',
-    '7': '%edi',
+    '0': '%EAX',
+    '1': '%ECX',
+    '2': '%EDX',
+    '3': '%EBX',
+    '4': '%ESP',
+    '5': '%EBP',
+    '6': '%ESI',
+    '7': '%EDI',
     'f': 'null',
     'F': 'null'
 }

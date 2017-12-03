@@ -13,13 +13,75 @@
 
 <body>
     <div id="y-86">
-        <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect" v-if="uploadAllowed">
-           
-        </div>
+        <v-app light>
 
-        <div id="showResult" v-if="!uploadAllowed">
-            {{ result[0] }}
-        </div>
+            <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect" v-if="uploadAllowed">
+                <img id="dropBackground" src="/static/bkgd.gif">
+
+                </img>
+            </div>
+
+            <div id="showResult" v-if="!uploadAllowed">
+                <button @click="renderNext">
+                    render next
+                </button>
+                <button @click="renderPrevious">
+                    render previous
+                </button>
+                <v-container grid-list-md text-xs-center>
+                    <v-layout row wrap>
+                        <v-flex xs1 v-for="(val, name) in Control" :name="name" :val="val">
+                            <v-card>
+                                <h4>{{ name }}</h4>
+                                {{ val }}
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs1 v-for="(val, name) in Fetch" :name="name" :val="val">
+                            <v-card>
+                                <h4>{{ name }}</h4>
+                                {{ val }}
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs1 v-for="(val, name) in Decode" :name="name" :val="val">
+                            <v-card>
+                                <h4>{{ name }}</h4>
+                                {{ val }}
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs1 v-for="(val, name) in Execute" :name="name" :val="val">
+                            <v-card>
+                                <h4>{{ name }}</h4>
+                                {{ val }}
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs1 v-for="(val, name) in Memory" :name="name" :val="val">
+                            <v-card>
+                                <h4>{{ name }}</h4>
+                                {{ val }}
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs1 v-for="(val, name) in WriteBack" :name="name" :val="val">
+                            <v-card>
+                                <h4>{{ name }}</h4>
+                                {{ val }}
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+
+                </v-container>
+            </div>
+        </v-app>
+
     </div>
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
@@ -36,6 +98,13 @@
                 uploadAllowed: true,
                 result: null,
                 info: "you can not see me!",
+                cyc: 0,
+                Fetch: {},
+                Decode: {},
+                Execute: {},
+                Memory: {},
+                WriteBack: {},
+                Control: {}
             },
             methods: {
                 handleDragOver: function (evt) {
@@ -64,6 +133,28 @@
                     }
                 },
 
+                renderNext: function () {
+                    this.cyc++;
+                    var data = this.result[this.cyc];
+                    console.log(data);
+                    this.Fetch = data.F;
+                    this.Decode = data.D;
+                    this.Execute = data.E;
+                    this.Memory = data.M;
+                    this.WriteBack = data.W;
+                    this.Control = data.control;
+                },
+                renderPrevious: function () {
+                    this.cyc--;
+                    var data = this.result[this.cyc];
+                    console.log(data);
+                    this.Fetch = data.F;
+                    this.Decode = data.D;
+                    this.Execute = data.E;
+                    this.Memory = data.M;
+                    this.WriteBack = data.W;
+                    this.Control = data.control;
+                },
             }
         });
     </script>

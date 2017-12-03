@@ -9,6 +9,122 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        html {
+            overflow: hidden;
+        }
+
+        #dropZone {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            z-index: 100;
+        }
+        #showResult {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+        }
+
+        video {
+            display: block;
+            position: absolute;
+            height: 99%;
+            width: 99%;
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            background-position: center;
+            background-size: cover;
+        }
+
+        #dropBackground {
+            display: block;
+            height: 99%;
+            width: 99%;
+            z-index: -1;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            /* background: url('/static/bkgd.gif') no-repeat; */
+            background: url('/static/bg2.jpeg') no-repeat;
+            background-position: center;
+            background-size: cover;
+            -webkit-filter: blur(5px);
+            -moz-filter: blur(5px);
+            -o-filter: blur(5px);
+            -ms-filter: blur(5px);
+            filter: blur(5px);
+        }
+
+        #resultBackground {
+            display: block;
+            height: 99%;
+            width: 99%;
+            z-index: -1;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            /* background: url('/static/bkgd.gif') no-repeat; */
+            background: url('/static/bkgd.gif') no-repeat;
+            background-position: center;
+            background-size: cover;
+            -webkit-filter: blur(5px);
+            -moz-filter: blur(5px);
+            -o-filter: blur(5px);
+            -ms-filter: blur(5px);
+            filter: blur(5px);
+        }
+
+        #welcomePanel {
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 3px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            top: 20%;
+            left: 10%;
+            right: 10%;
+            position: fixed;
+            z-index: 2;
+        }
+
+        #dataPanel {
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 3px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            top: 20%;
+            left: 10%;
+            right: 10%;
+            position: fixed;
+            z-index: 2;
+        }
+
+        h1 {
+            position: relative;
+            top: 10px;
+            text-align: center;
+            color: green;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,19 +132,59 @@
         <v-app light>
 
             <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect" v-if="uploadAllowed">
-                <img id="dropBackground" src="/static/bkgd.gif">
+                <div id="dropBackground">
+                    <!-- <div class="vb">
+                        <video src="/static/bvideo.mp4" autoplay loop volume="0"></video>
+                    </div> -->
 
-                </img>
+                </div>
+                <p id="welcomeTitle" class="elevation-7">
+                    <h1>
+                        The Modern Y86 Simulator
+                    </h1>
+                </p>
+                <v-container grid-list-md text-xs-center id="welcomePanel" :class="{'elevation-7': !clicked, 'elevation-14': clicked}" @click="clicked = !clicked">
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-card dark color="primary">
+                                <v-card-text class="px-0">12</v-card-text>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
             </div>
 
             <div id="showResult" v-if="!uploadAllowed">
+                <div id="resultBackground">
+
+                </div>
+                <v-container grid-list-md text-xs-center id="dataPanel" :class="{'elevation-7': !clicked, 'elevation-14': clicked}" @click="clicked = !clicked">
+                    <v-layout row wrap>
+                        <v-flex d-flex md1>
+                            <v-layout row wrap>
+                                <v-flex d-flex>
+                                    <v-layout row wrap>
+                                        <v-flex d-flex v-for="(val, name) in cur.reg" :name="name" :val="val" xs12>
+                                            <v-card>
+                                                {{ name }}: {{ val }}
+                                            </v-card>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-flex>
+                            </v-layout>
+                        </v-flex>
+
+                    </v-layout>
+                </v-container>
+
                 <button @click="renderNext">
                     render next
                 </button>
                 <button @click="renderPrevious">
                     render previous
                 </button>
-                <v-container grid-list-md text-xs-center>
+
+                <!-- <v-container grid-list-md text-xs-center fluid grid-list-md>
                     <v-layout row wrap>
                         <v-flex xs1 v-for="(val, name) in Control" :name="name" :val="val">
                             <v-card>
@@ -77,8 +233,7 @@
                             </v-card>
                         </v-flex>
                     </v-layout>
-
-                </v-container>
+                </v-container> -->
             </div>
         </v-app>
 
@@ -87,26 +242,51 @@
     <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
     <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
 
+    <!-- components -->
+
+    <!-- <template id="regCell">
+        {{ name }}: {{ value }}
+    </template> -->
+
 
     <script>
-        Vue.component('page', {
-            template: '#page'
-        })
+        // Vue.component('m-reg-cell', {
+        //     props: ['name', 'value'],
+        //     template: '#regCell'
+        // })
         new Vue({
             el: '#y-86',
             data: {
                 uploadAllowed: true,
                 result: null,
                 info: "you can not see me!",
-                cyc: 0,
+                cyc: -1,
+                cur: null,
+                regs: [],
                 Fetch: {},
                 Decode: {},
                 Execute: {},
                 Memory: {},
                 WriteBack: {},
-                Control: {}
+                Control: {},
+                clicked: false,
             },
             methods: {
+                getRegName: function (id) {
+                    if (id > 7)
+                        return '%---';
+                    return {
+                        0: '%eax',
+                        1: '%ecx',
+                        2: '%edx',
+                        3: '%ebx',
+                        4: '%esp',
+                        5: '%ebp',
+                        6: '%esi',
+                        7: '%edi',
+                    }[id];
+                },
+
                 handleDragOver: function (evt) {
                     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
                 },
@@ -127,33 +307,23 @@
                                 }, 'json'
                             ).done(function () {
                                 self.uploadAllowed = false;
+                                self.renderNext();
                             });
                         };
                         reader.readAsText(f);
                     }
                 },
-
+                renderReg: function () {
+                },
                 renderNext: function () {
                     this.cyc++;
-                    var data = this.result[this.cyc];
-                    console.log(data);
-                    this.Fetch = data.F;
-                    this.Decode = data.D;
-                    this.Execute = data.E;
-                    this.Memory = data.M;
-                    this.WriteBack = data.W;
-                    this.Control = data.control;
+                    this.cur = this.result[this.cyc];
+                    console.log(this.cur.reg);
                 },
                 renderPrevious: function () {
                     this.cyc--;
-                    var data = this.result[this.cyc];
-                    console.log(data);
-                    this.Fetch = data.F;
-                    this.Decode = data.D;
-                    this.Execute = data.E;
-                    this.Memory = data.M;
-                    this.WriteBack = data.W;
-                    this.Control = data.control;
+                    this.cur = this.result[this.cyc];
+                    console.log(this.cur);
                 },
             }
         });

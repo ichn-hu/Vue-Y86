@@ -236,6 +236,11 @@
             -webkit-transition: background-color 1s box-shadow 1s;
             transition: background-color 1s box-shadow 1s;
         }
+        
+        .m-operation {
+            font-family: modeno;
+            font-size: 17px;
+        }
     </style>
 </head>
 
@@ -415,36 +420,54 @@
     </template>
 
     <template id="template-m-fetch">
-        <v-layout row wrap class="m-row mx-1  my-1">
-            <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="F" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
-            </v-flex>
-            <v-flex xs2 offset-xs2 class=" my-2">
-                <m-card title="predPC" :operation="operation" :value="predPC" :bubble="bubble" :stall="stall"></m-card>
-            </v-flex>
-        </v-layout>
+        <v-tooltip top :disabled="operation.length === 0">
+            <v-layout row wrap class="m-row mx-1  my-1" slot="activator">
+                <v-flex xs2 offset-xs0 class="my-2">
+                    <m-stage :ins="ins" name="F" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                </v-flex>
+                <v-flex xs2 offset-xs2 class=" my-2">
+                    <m-card title="predPC" :operation="operation" :value="predPC" :bubble="bubble" :stall="stall"></m-card>
+                </v-flex>
+            </v-layout>
+            <span>
+                <template>
+                    <div v-for="c in operation" class="m-operation">
+                        {{ c }}
+                    </div>
+                </template>
+            </span>
+        </v-tooltip>
     </template>
     <template id="template-m-decode">
-        <v-layout row wrap class="m-row mx-1  my-1">
-            <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="D" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
-            </v-flex>
-            <v-flex xs1 class=" my-2   mx-1 px-0 py-0  ">
-                <m-card title="rA" :value="rA"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2   mx-1  px-0 py-0  ">
-                <m-card title="rB" :value="rB"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2   mx-1  px-0 py-0  ">
-                <m-card title="valC" :value="valC"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2   mx-1  px-0 py-0  ">
-                <m-card title="valP" :value="valP"></m-card>
-            </v-flex>
-        </v-layout>
+        <v-tooltip top :disabled="operation.length === 0">
+            <v-layout row wrap class="m-row mx-1  my-1" slot="activator">
+                <v-flex xs2 offset-xs0 class="my-2">
+                    <m-stage :ins="ins" name="D" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                </v-flex>
+                <v-flex xs1 class=" my-2   mx-1 px-0 py-0  ">
+                    <m-card title="rA" :value="rA"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2   mx-1  px-0 py-0  ">
+                    <m-card title="rB" :value="rB"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2   mx-1  px-0 py-0  ">
+                    <m-card title="valC" :value="valC"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2   mx-1  px-0 py-0  ">
+                    <m-card title="valP" :value="valP"></m-card>
+                </v-flex>
+            </v-layout>
+            <span>
+                <template>
+                    <div v-for="c in operation" class="m-operation">
+                        {{ c }}
+                    </div>
+                </template>
+            </span>
+        </v-tooltip>
     </template>
     <template id="template-m-execute">
-        <v-tooltip top>
+        <v-tooltip top :disabled="operation.length === 0">
             <v-layout row wrap class="m-row mx-1  my-1" slot="activator">
                 <v-flex xs2 offset-xs0 class="my-2">
                     <m-stage :ins="ins" name="E" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
@@ -471,50 +494,74 @@
                     <m-card title="srcA" :value="srcA"></m-card>
                 </v-flex>
             </v-layout>
-            <span>Top tooltip</span>
+            <span>
+                <template>
+                    <div v-for="c in operation" class="m-operation">
+                        {{ c }}
+                    </div>
+                </template>
+            </span>
         </v-tooltip>
     </template>
     <template id="template-m-memory">
-        <v-layout row wrap class="m-row mx-1  my-1">
-            <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="M" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
-            </v-flex>
-            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="Cnd" :value="Cnd"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="valE" :value="valE"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="valA" :value="valA"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="dstE" :value="dstE"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="dstM" :value="dstM"></m-card>
-            </v-flex>
-        </v-layout>
+        <v-tooltip top :disabled="operation.length === 0">
+            <v-layout row wrap class="m-row mx-1  my-1" slot="activator">
+                <v-flex xs2 offset-xs0 class="my-2">
+                    <m-stage :ins="ins" name="M" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                </v-flex>
+                <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="Cnd" :value="Cnd"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="valE" :value="valE"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="valA" :value="valA"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="dstE" :value="dstE"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="dstM" :value="dstM"></m-card>
+                </v-flex>
+            </v-layout>
+            <span>
+                <template>
+                    <div v-for="c in operation" class="m-operation">
+                        {{ c }}
+                    </div>
+                </template>
+            </span>
+        </v-tooltip>
     </template>
     <template id="template-m-writeback">
-        <v-layout row wrap class="m-row mx-1 my-1">
-            <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="W" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
-            </v-flex>
-            <v-flex xs1 class="  my-2  mx-1 px-0 py-0"></v-flex>
-            <v-flex xs2 class=" my-2  mx-1 px-0 py-0">
-                <m-card title="valE" :value="valE"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="valM" :value="valM"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
-                <m-card title="dstE" :value="dstE"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2  mx-1 px-0 py-0  ">
-                <m-card title="dstM" :value="dstM"></m-card>
-            </v-flex>
-        </v-layout>
+        <v-tooltip top :disabled="operation.length === 0">
+            <v-layout row wrap class="m-row mx-1 my-1" slot="activator">
+                <v-flex xs2 offset-xs0 class="my-2">
+                    <m-stage :ins="ins" name="W" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                </v-flex>
+                <v-flex xs1 class="  my-2  mx-1 px-0 py-0"></v-flex>
+                <v-flex xs2 class=" my-2  mx-1 px-0 py-0">
+                    <m-card title="valE" :value="valE"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="valM" :value="valM"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
+                    <m-card title="dstE" :value="dstE"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2  mx-1 px-0 py-0  ">
+                    <m-card title="dstM" :value="dstM"></m-card>
+                </v-flex>
+            </v-layout>
+            <span>
+                <template>
+                    <div v-for="c in operation" class="m-operation">
+                        {{ c }}
+                    </div>
+                </template>
+            </span>
+        </v-tooltip>
     </template>
 
     <template id="template-m-stage">

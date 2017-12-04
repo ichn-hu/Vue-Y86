@@ -2,6 +2,7 @@ from kernel.const import *
 
 
 def update(cur, nxt):
+
     F_stall = True if (cur.E.icode in [IMRMOVL, IPOPL]
                        and cur.E.dstM in [nxt.E.srcA, nxt.E.srcB]) \
         or IRET in [cur.D.icode, cur.E.icode, cur.M.icode] else False

@@ -166,6 +166,7 @@
             height: 100%;
             display: block;
             text-align: center;
+
         }
 
         .m-row:hover {
@@ -236,7 +237,7 @@
             -webkit-transition: background-color 1s box-shadow 1s;
             transition: background-color 1s box-shadow 1s;
         }
-        
+
         .m-operation {
             font-family: modeno;
             font-size: 17px;
@@ -367,11 +368,14 @@
                                 <m-decode v-bind="cur.D"></m-decode>
                                 <m-fetch v-bind="cur.F"></m-fetch>
                                 <v-card-actions>
-                                    <v-btn :cyc="cyc">
+                                    <v-btn :ripple="false"  :disable="true" :cyc="cyc" >
                                         <v-icon medium left>
                                             fa-clock-o
                                         </v-icon>
                                         {{ cyc }}
+                                    </v-btn>
+                                    <v-btn   :ripple="false" :disable="true" style="width: 100%; padding: 0px;">
+                                        <v-slider v-model="cyc" thumb-label step="1" :max="maxCyc" ticks style=" padding: 3px;"></v-slider>
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn @click.stop="renderInit">
@@ -615,6 +619,7 @@
             data: {
                 uploadAllowed: true,
                 result: null,
+                maxCyc: 0,
                 cyc: -1,
                 cur: null,
                 stopped: true,
@@ -699,6 +704,8 @@
                     }
                 },
                 renderThis: function () {
+                    this.cur = this.result[this.cyc];
+
                     // this.cur.F.name = 'F';
                     // this.cur.D.name = 'D';
                     // this.cur.E.name = 'E';
@@ -714,6 +721,7 @@
                     //     alert('233');
                     //     if (this.cur.W.stall || this.cur.W.bubble)
                     //     alert('233');
+
                     this.cur.F.ins = this.renderIns(this.cur.F.ins);
                     this.cur.D.ins = this.renderIns(this.cur.D.ins);
                     this.cur.W.ins = this.renderIns(this.cur.W.ins);
@@ -741,6 +749,11 @@
                     this.cur.W.dstM = this.getRegName(this.cur.W.dstM);
                 },
                 renderNext: function () {
+                    if (this.cyc + 1 <= this.maxCyc) {
+                        ++this.cyc;
+                        return true;
+                    }
+                    return false;
                     console.log(this.result[this.cyc + 1]);
                     if (this.result[this.cyc + 1] !== undefined) {
                         this.cyc++;
@@ -752,6 +765,11 @@
                     return false;
                 },
                 renderPrevious: function () {
+                    if (this.cyc - 1 >= 0) {
+                        --this.cyc;
+                        return true;
+                    }
+                    return false;
                     if (this.result[this.cyc - 1] !== undefined) {
                         this.cyc--;
                         this.cur = this.result[this.cyc];
@@ -763,6 +781,10 @@
                 },
                 renderInit: function () {
                     console.log("render init");
+                    maxCyc = 0;
+                    while (this.result[maxCyc])
+                        ++maxCyc;
+                    this.maxCyc = maxCyc - 1;
                     this.cyc = -1;
                     this.stopped = true;
                     this.renderNext();
@@ -781,7 +803,13 @@
                         this.runThis();
                     }
                 }
-            }
+            },
+            
+            watch: {
+                cyc: function() {
+                    this.renderThis();
+                }
+            },
         });
     </script>
 </body>

@@ -138,17 +138,45 @@
             font-family: 'modeno'
         }
 
+        /* m-fetch m-execute m-decode m-memory m-writeback {
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 2);
+            height: 100%;
+            widows: 100%;
+        }
+
+        m-fetch:hover m-execute:hover m-decode:hover m-memory:hover m-writeback:hover {
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 2);
+            height: 100%;
+            widows: 100%;
+        } */
+
+
         .m-card {
             background: rgba(255, 255, 255, 0.35);
             border-radius: 3px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
-            height: 40px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0);
+            height: 100%;
             display: block;
             text-align: center;
         }
 
+        .m-card:hover {
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 3px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 2);
+            height: 100%;
+            display: block;
+            text-align: center;
+        }
+
+        .m-row:hover {
+            border-radius: 3px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 2);
+        }
+
         .m-card-title {
-            height: 20px;
+            height: 30%;
+            padding: 5px;
             font-size: 12px;
             font-family: 'Inconsolata';
         }
@@ -308,7 +336,7 @@
                                 <v-layout row wrap>
                                     <v-flex d-flex>
                                         <v-layout row wrap>
-                                            <v-flex d-flex v-for="(val, name) in cur.mem" :name="name" :val="val" xs12  class="my-1">
+                                            <v-flex d-flex v-for="(val, name) in cur.mem" :name="name" :val="val" xs12 class="my-1">
                                                 <m-card :title="name" :value="val">
                                                 </m-card>
                                             </v-flex>
@@ -388,107 +416,107 @@
     </template>
 
     <template id="template-m-fetch">
-        <v-layout row wrap>
+        <v-layout row wrap class="m-row mx-1">
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="F"></m-stage>
+                <m-stage :ins="ins" name="F" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs2 offset-xs2 class="elevation-5 my-2">
+            <v-flex xs2 offset-xs2 class=" my-2">
                 <m-card title="predPC" :operation="operation" :value="predPC" :bubble="bubble" :stall="stall"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-decode">
-        <v-layout row wrap>
+        <v-layout row wrap class="m-row mx-1">
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="D" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="D" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2   mx-1">
+            <v-flex xs1 class=" my-2   mx-1 px-0 py-0  ">
                 <m-card title="rA" :value="rA"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2   mx-1">
+            <v-flex xs1 class=" my-2   mx-1  px-0 py-0  ">
                 <m-card title="rB" :value="rB"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2   mx-1">
+            <v-flex xs2 class=" my-2   mx-1  px-0 py-0  ">
                 <m-card title="valC" :value="valC"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2   mx-1">
+            <v-flex xs2 class=" my-2   mx-1  px-0 py-0  ">
                 <m-card title="valP" :value="valP"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-execute">
-        <v-layout row wrap>
+        <v-layout row wrap class="m-row mx-1">
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="E" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="E" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2  px-1  mx-1">
+            <v-flex xs1 class=" my-2  px-0 py-0  mx-1 ">
                 <m-card title="valC" :value="valC"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2  mx-1">
+            <v-flex xs2 class=" my-2  mx-1 px-0 py-0 ">
                 <m-card title="valA" :value="valA"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2  mx-1">
+            <v-flex xs2 class=" my-2  mx-1 px-0 py-0 ">
                 <m-card title="valB" :value="valB"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2  mx-1">
+            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
                 <m-card title="dstE" :value="dstE"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2  mx-1">
+            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
                 <m-card title="dstM" :value="dstM"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2  mx-1">
+            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
                 <m-card title="srcA" :value="srcA"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2  mx-1">
+            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
                 <m-card title="srcA" :value="srcA"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-memory">
-        <v-layout row wrap>
+        <v-layout row wrap class="m-row mx-1">
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="M" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="M" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2   mx-1">
+            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="Cnd" :value="Cnd"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2   mx-1">
+            <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="valE" :value="valE"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2   mx-1">
+            <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="valA" :value="valA"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2   mx-1">
+            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="dstE" :value="dstE"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2   mx-1">
+            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="dstM" :value="dstM"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-writeback">
-        <v-layout row wrap>
+        <v-layout row wrap class="m-row mx-1">
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="W" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="W" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class=" "></v-flex>
-            <v-flex xs2 class="elevation-5 my-2">
+            <v-flex xs1 class="  my-2  mx-1 px-0 py-0"></v-flex>
+            <v-flex xs2 class=" my-2  mx-1 px-0 py-0">
                 <m-card title="valE" :value="valE"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2   mx-1">
+            <v-flex xs2 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="valM" :value="valM"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2   mx-1">
+            <v-flex xs1 class=" my-2   mx-1 px-0 py-0 ">
                 <m-card title="dstE" :value="dstE"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2  mx-1 ">
+            <v-flex xs1 class=" my-2  mx-1 px-0 py-0  ">
                 <m-card title="dstM" :value="dstM"></m-card>
             </v-flex>
         </v-layout>
     </template>
 
     <template id="template-m-stage">
-        <div class="stage-tile" v-bind:class="{bubble: bubble, stall: stall}">
+        <div class="stage-tile" v-bind:class="{bubble: bubble | stat === 5, stall: stall}">
             <div class="m-stage-title">
                 {{ name }}
             </div>
@@ -510,7 +538,7 @@
             template: '#template-m-card',
         });
         Vue.component('m-stage', {
-            props: ['name', 'ins', 'bubble', 'stall', 'operation'],
+            props: ['name', 'ins', 'bubble', 'stall', 'operation', 'stat'],
             template: '#template-m-stage'
         });
         Vue.component('m-fetch', {

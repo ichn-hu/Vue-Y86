@@ -55,7 +55,8 @@ def run():
         info['W'] = cur.W.__dict__
         info['reg'] = reg.info()
         info['mem'] = mem.info()
-        info['cc'] = cc.__dict__
+        info['cc'] = {}
+        info['cc'].update(cc.__dict__)
         info['control'] = update(cur, nxt)
 
         ret[clock] = info

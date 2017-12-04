@@ -270,23 +270,45 @@
                     </v-container>
                     <v-container grid-list-md text-xs-center>
                         <v-layout row wrap>
-                            <v-flex d-flex xs12>
-                                    <v-flex d-flex xs6 v-for="(val, name) in cur.reg" :name="name" :val="val" xs12>
-                                        <m-card :title="name" :value="val">
-                                        </m-card>
-                                    </v-flex>
+                            <v-flex d-flex xs6>
+                                <m-card title="EAX" :value="cur.reg.EAX"></m-card>
+                            </v-flex>
+                            <v-flex d-flex xs6>
+                                <m-card title="ECX" :value="cur.reg.ECX"></m-card>
+                            </v-flex>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <v-flex d-flex xs6>
+                                <m-card title="EDX" :value="cur.reg.EDX"></m-card>
+                            </v-flex>
+                            <v-flex d-flex xs6>
+                                <m-card title="EBX" :value="cur.reg.EBX"></m-card>
+                            </v-flex>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <v-flex d-flex xs6>
+                                <m-card title="ESP" :value="cur.reg.ESP"></m-card>
+                            </v-flex>
+                            <v-flex d-flex xs6>
+                                <m-card title="EBP" :value="cur.reg.EBP"></m-card>
+                            </v-flex>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <v-flex d-flex xs6>
+                                <m-card title="ESI" :value="cur.reg.ESI"></m-card>
+                            </v-flex>
+                            <v-flex d-flex xs6>
+                                <m-card title="EDI" :value="cur.reg.EDI"></m-card>
                             </v-flex>
                         </v-layout>
                     </v-container>
                     <v-container>
                         <v-layout row wrap>
-
-
-                            <v-flex d-flex xs6>
+                            <v-flex d-flex xs12>
                                 <v-layout row wrap>
                                     <v-flex d-flex>
                                         <v-layout row wrap>
-                                            <v-flex d-flex v-for="(val, name) in cur.mem" :name="name" :val="val" xs12>
+                                            <v-flex d-flex v-for="(val, name) in cur.mem" :name="name" :val="val" xs12  class="my-1">
                                                 <m-card :title="name" :value="val">
                                                 </m-card>
                                             </v-flex>
@@ -371,14 +393,14 @@
                 <m-stage :ins="ins" name="F"></m-stage>
             </v-flex>
             <v-flex xs2 offset-xs2 class="elevation-5 my-2">
-                <m-card title="predPC" :value="predPC" :bubble="bubble" :stall="stall"></m-card>
+                <m-card title="predPC" :operation="operation" :value="predPC" :bubble="bubble" :stall="stall"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-decode">
         <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="D" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="D" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
             <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="rA" :value="rA"></m-card>
@@ -397,7 +419,7 @@
     <template id="template-m-execute">
         <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="E" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="E" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
             <v-flex xs1 class="elevation-5 my-2  px-1  mx-1">
                 <m-card title="valC" :value="valC"></m-card>
@@ -425,7 +447,7 @@
     <template id="template-m-memory">
         <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="M" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="M" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
             <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="Cnd" :value="Cnd"></m-card>
@@ -447,7 +469,7 @@
     <template id="template-m-writeback">
         <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="W" :bubble="bubble" :stall="stall"></m-stage>
+                <m-stage :ins="ins" name="W" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
             <v-flex xs1 class=" "></v-flex>
             <v-flex xs2 class="elevation-5 my-2">
@@ -488,7 +510,7 @@
             template: '#template-m-card',
         });
         Vue.component('m-stage', {
-            props: ['name', 'ins', 'bubble', 'stall'],
+            props: ['name', 'ins', 'bubble', 'stall', 'operation'],
             template: '#template-m-stage'
         });
         Vue.component('m-fetch', {

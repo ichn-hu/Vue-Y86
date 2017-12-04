@@ -99,11 +99,11 @@
             background: url('/static/bkgd2.gif') no-repeat;
             background-position: center;
             background-size: cover;
-            -webkit-filter: blur(5px);
-            -moz-filter: blur(5px);
-            -o-filter: blur(5px);
-            -ms-filter: blur(5px);
-            filter: blur(5px);
+            -webkit-filter: blur(3px);
+            -moz-filter: blur(3px);
+            -o-filter: blur(3px);
+            -ms-filter: blur(3px);
+            filter: blur(3px);
         }
 
         #welcomePanel {
@@ -119,9 +119,9 @@
         }
 
         #dataPanel {
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.25);
             border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
             font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
             top: 20%;
             left: 10%;
@@ -268,21 +268,20 @@
                             </v-flex>
                         </v-layout>
                     </v-container>
+                    <v-container grid-list-md text-xs-center>
+                        <v-layout row wrap>
+                            <v-flex d-flex xs12>
+                                    <v-flex d-flex xs6 v-for="(val, name) in cur.reg" :name="name" :val="val" xs12>
+                                        <m-card :title="name" :value="val">
+                                        </m-card>
+                                    </v-flex>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
                     <v-container>
                         <v-layout row wrap>
 
-                            <v-flex d-flex xs6>
-                                <v-layout row wrap>
-                                    <v-flex d-flex>
-                                        <v-layout row wrap>
-                                            <v-flex d-flex v-for="(val, name) in cur.reg" :name="name" :val="val" xs12>
-                                                <m-card :title="name" :value="val">
-                                                </m-card>
-                                            </v-flex>
-                                        </v-layout>
-                                    </v-flex>
-                                </v-layout>
-                            </v-flex>
+
                             <v-flex d-flex xs6>
                                 <v-layout row wrap>
                                     <v-flex d-flex>

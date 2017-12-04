@@ -150,7 +150,6 @@
             widows: 100%;
         } */
 
-
         .m-card {
             background: rgba(255, 255, 255, 0.35);
             border-radius: 3px;
@@ -416,7 +415,7 @@
     </template>
 
     <template id="template-m-fetch">
-        <v-layout row wrap class="m-row mx-1">
+        <v-layout row wrap class="m-row mx-1  my-1">
             <v-flex xs2 offset-xs0 class="my-2">
                 <m-stage :ins="ins" name="F" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
@@ -426,7 +425,7 @@
         </v-layout>
     </template>
     <template id="template-m-decode">
-        <v-layout row wrap class="m-row mx-1">
+        <v-layout row wrap class="m-row mx-1  my-1">
             <v-flex xs2 offset-xs0 class="my-2">
                 <m-stage :ins="ins" name="D" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
@@ -445,35 +444,38 @@
         </v-layout>
     </template>
     <template id="template-m-execute">
-        <v-layout row wrap class="m-row mx-1">
-            <v-flex xs2 offset-xs0 class="my-2">
-                <m-stage :ins="ins" name="E" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
-            </v-flex>
-            <v-flex xs1 class=" my-2  px-0 py-0  mx-1 ">
-                <m-card title="valC" :value="valC"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2  mx-1 px-0 py-0 ">
-                <m-card title="valA" :value="valA"></m-card>
-            </v-flex>
-            <v-flex xs2 class=" my-2  mx-1 px-0 py-0 ">
-                <m-card title="valB" :value="valB"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
-                <m-card title="dstE" :value="dstE"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
-                <m-card title="dstM" :value="dstM"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
-                <m-card title="srcA" :value="srcA"></m-card>
-            </v-flex>
-            <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
-                <m-card title="srcA" :value="srcA"></m-card>
-            </v-flex>
-        </v-layout>
+        <v-tooltip top>
+            <v-layout row wrap class="m-row mx-1  my-1" slot="activator">
+                <v-flex xs2 offset-xs0 class="my-2">
+                    <m-stage :ins="ins" name="E" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
+                </v-flex>
+                <v-flex xs1 class=" my-2  px-0 py-0  mx-1 ">
+                    <m-card title="valC" :value="valC"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2  mx-1 px-0 py-0 ">
+                    <m-card title="valA" :value="valA"></m-card>
+                </v-flex>
+                <v-flex xs2 class=" my-2  mx-1 px-0 py-0 ">
+                    <m-card title="valB" :value="valB"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
+                    <m-card title="dstE" :value="dstE"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
+                    <m-card title="dstM" :value="dstM"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
+                    <m-card title="srcA" :value="srcA"></m-card>
+                </v-flex>
+                <v-flex xs1 class=" my-2  mx-1 px-0 py-0 ">
+                    <m-card title="srcA" :value="srcA"></m-card>
+                </v-flex>
+            </v-layout>
+            <span>Top tooltip</span>
+        </v-tooltip>
     </template>
     <template id="template-m-memory">
-        <v-layout row wrap class="m-row mx-1">
+        <v-layout row wrap class="m-row mx-1  my-1">
             <v-flex xs2 offset-xs0 class="my-2">
                 <m-stage :ins="ins" name="M" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
@@ -495,7 +497,7 @@
         </v-layout>
     </template>
     <template id="template-m-writeback">
-        <v-layout row wrap class="m-row mx-1">
+        <v-layout row wrap class="m-row mx-1 my-1">
             <v-flex xs2 offset-xs0 class="my-2">
                 <m-stage :ins="ins" name="W" :stat="stat" :operation="operation" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>

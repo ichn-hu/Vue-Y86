@@ -275,6 +275,13 @@
 
                 </div>
 
+                <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" :overlay=false scrollable>
+                    <v-btn icon @click.native="dialog = false">
+                        <v-icon>close</v-icon>
+                    </v-btn>
+                    
+                </v-dialog>
+
                 <v-navigation-drawer v-model="primaryDrawer.model" :permanent="primaryDrawer.type === 'permanent'" :temporary="primaryDrawer.type === 'temporary'"
                     :clipped="primaryDrawer.clipped" :floating="primaryDrawer.floating" :mini-variant="primaryDrawer.mini" fixed
                     overflow app style="background: rgba(255, 255, 255, 0.35);box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);">
@@ -357,6 +364,10 @@
                 <v-toolbar app absolute :clipped-left="primaryDrawer.clipped">
                     <v-toolbar-side-icon @click.stop="primaryDrawer.model = !primaryDrawer.model" v-if="primaryDrawer.type !== 'permanent'"></v-toolbar-side-icon>
                     <v-toolbar-title style="font-family: 'modeno'">The Modern Y86 Simulator</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn @click.stop="dialog = true" :fab="true" :small="true" class="elevation-0">
+                        <v-icon medium>fa-line-chart</v-icon>
+                    </v-btn>
                 </v-toolbar>
                 <v-content>
                     <v-container grid-list-xl text-xs-center>
@@ -368,13 +379,31 @@
                                 <m-decode v-bind="cur.D"></m-decode>
                                 <m-fetch v-bind="cur.F"></m-fetch>
                                 <v-card-actions>
-                                    <v-btn :ripple="false"  :disable="true" :cyc="cyc" >
+                                    <v-btn :ripple="false"  :cyc="cyc" @click.stop="changeFreq = true">
                                         <v-icon medium left>
                                             fa-clock-o
                                         </v-icon>
                                         {{ cyc }}
                                     </v-btn>
-                                    <v-btn   :ripple="false" :disable="true" style="width: 100%; padding: 0px;">
+                                </v-dialog>
+                                
+                                <v-dialog v-model="changeFreq" max-width="500px">
+                                  <v-card>
+                                    <v-card-title>
+                                      Change Frequency
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-text-field
+                                        name="Running Frequency"
+                                        label="Running Frequency"
+                                        :value="freq"
+                                        v-model="freq"
+                                        ></v-text-field>
+                                    </v-card-text>
+                                  </v-card>
+                                </v-dialog>
+
+                                    <v-btn :ripple="false" :disable="true" style="width: 100%; padding: 0px;">
                                         <v-slider v-model="cyc" thumb-label step="1" :max="maxCyc" ticks style=" padding: 3px;"></v-slider>
                                     </v-btn>
                                     <v-spacer></v-spacer>
@@ -622,6 +651,8 @@
                 maxCyc: 0,
                 cyc: -1,
                 cur: null,
+                dialog: false,
+                changeFreq: false,
                 stopped: true,
                 freq: 10,
                 dark: true,
@@ -804,13 +835,29 @@
                     }
                 }
             },
-            
+
             watch: {
-                cyc: function() {
+                cyc: function () {
                     this.renderThis();
                 }
             },
         });
+        document.onkeyup = function(evt) {
+            var e = evt || window.evt || arguments.callee.caller.arguments[0];
+            if (e && !myVue.$data.uploadAllowed) {
+                if (e.keyCode == 13 || e.keyCode == 82)
+                    myVue.renderInit();
+                else if (e.keyCode == 37 || e.keyCode == 80)
+                    myVue.renderPrevious();
+                else if (e.keyCode == 39 || e.keyCode == 78)
+                    myVue.renderNext();
+                else if (e.keyCode == 32) {
+                    myVue.$data.stopped = !myVue.$data.stopped;
+                    if (!myVue.$data.stopped)
+                        myVue.runThis();
+                }
+            }
+        }
     </script>
 </body>
 

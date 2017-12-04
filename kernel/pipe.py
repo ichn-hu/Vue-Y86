@@ -41,7 +41,9 @@ class PipeReg:
     def __init__(self):
         self.F = self.Reg(**{
             ins: VNONE,
-            predPC: ZERO
+            predPC: ZERO,
+            bubble: False,
+            stall: False,
         })
         self.D = self.Reg(**{
             ins: VNONE,
@@ -52,6 +54,8 @@ class PipeReg:
             rB: RNONE,
             valC: VNONE,
             valP: VNONE,
+            bubble: False,
+            stall: False,
         })
         self.E = self.Reg(**{
             ins: VNONE,
@@ -65,6 +69,8 @@ class PipeReg:
             dstM: RNONE,
             srcA: RNONE,
             srcB: RNONE,
+            bubble: False,
+            stall: False,
         })
         self.M = self.Reg(**{
             ins: VNONE,
@@ -75,6 +81,8 @@ class PipeReg:
             valE: VNONE,
             dstM: RNONE,
             dstE: RNONE,
+            bubble: False,
+            stall: False,
         })
         self.W = self.Reg(**{
             ins: VNONE,
@@ -84,6 +92,8 @@ class PipeReg:
             dstM: RNONE,
             valM: VNONE,
             valE: VNONE,
+            bubble: False,
+            stall: False,
         })
 
         

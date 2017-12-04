@@ -73,7 +73,7 @@
             min-width: 100%;
             min-height: 100%;
             z-index: -100;
-            background: url('/static/bkgd.gif') no-repeat;
+            background: url('/static/bkgd3.gif') no-repeat;
             /* background: url('/static/bg2.jpeg') no-repeat; */
             background-position: center;
             background-size: cover;
@@ -96,7 +96,7 @@
             min-height: 100%;
             z-index: -100;
             /* background: url('/static/bkgd.gif') no-repeat; */
-            background: url('/static/bkgd.gif') no-repeat;
+            background: url('/static/bkgd2.gif') no-repeat;
             background-position: center;
             background-size: cover;
             -webkit-filter: blur(5px);
@@ -120,7 +120,7 @@
 
         #dataPanel {
             background: rgba(255, 255, 255, 0.35);
-            border-radius: 3px;
+            border-radius: 5px;
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
             font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
             top: 20%;
@@ -139,6 +139,9 @@
         }
 
         .m-card {
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 3px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
             height: 40px;
             display: block;
             text-align: center;
@@ -146,19 +149,72 @@
 
         .m-card-title {
             height: 20px;
+            font-size: 12px;
             font-family: 'Inconsolata';
         }
 
         .m-card-value {
             font-weight: bold;
+            font-size: 15px;
             font-family: 'Inconsolata';
+        }
+
+        .stage-tile {
+            height: 100%;
+            width: 100%;
+        }
+
+        .m-stage-title {
+            font-weight: bold;
+            font-size: 22px;
+            font-family: 'modeno';
+            float: left;
+            height: auto;
+            width: 20%;
+            text-align: center;
+        }
+
+        .m-stage-content {
+            position: relative;
+            float: left;
+            height: auto;
+            text-align: left;
+            width: 80%;
+        }
+
+        .m-stage-addr {
+            height: 20px;
+            font-size: 12px;
+            font-family: 'Inconsolata';
+            height: 40%;
+        }
+
+        .m-stage-code {
+            font-weight: bold;
+            font-size: 12px;
+            font-family: 'Inconsolata';
+            height: 60%;
+        }
+
+        .bubble {
+            background: rgba(29, 2, 2, 0.35);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+            -webkit-transition: background-color 0.5s;
+            transition: background-color 0.5s;
+        }
+
+        .stall {
+            background: rgba(243, 253, 95, 0.767);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+            -webkit-transition: background-color 1s box-shadow 1s;
+            transition: background-color 1s box-shadow 1s;
         }
     </style>
 </head>
 
 <body>
     <div id="y-86">
-        <v-app dark>
+        <v-app light>
 
             <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect" v-if="uploadAllowed">
                 <div id="dropBackground">
@@ -193,19 +249,19 @@
                     <v-container grid-list-md text-xs-center>
                         <v-layout row>
                             <v-flex xs4 class="my-1">
-                                <v-card  tile >
+                                <v-card tile>
                                     <m-card title="ZF" :value="cur.cc.ZF">
                                     </m-card>
                                 </v-card>
                             </v-flex>
                             <v-flex xs4 class="my-1">
-                                <v-card  tile >
+                                <v-card tile>
                                     <m-card title="SF" :value="cur.cc.SF">
                                     </m-card>
                                 </v-card>
                             </v-flex>
                             <v-flex xs4 class="my-1">
-                                <v-card  tile >
+                                <v-card tile>
                                     <m-card title="OF" :value="cur.cc.OF">
                                     </m-card>
                                 </v-card>
@@ -250,43 +306,41 @@
                 </v-toolbar>
                 <v-content>
                     <v-container grid-list-xl text-xs-center>
-                        <v-layout align-center justify-center>
+                        <v-layout align-center justify-center style="background: rgba(255, 255, 255, 0.35);box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);">
                             <v-flex xs12>
-                                <v-card>
-                                    <m-writeback v-bind="cur.W"></m-writeback>
-                                    <m-memory v-bind="cur.M"></m-memory>
-                                    <m-execute v-bind="cur.E"></m-execute>
-                                    <m-decode v-bind="cur.D"></m-decode>
-                                    <m-fetch v-bind="cur.F"></m-fetch>
-                                    <v-card-actions>
-                                        <v-btn :cyc="cyc">
-                                            <v-icon medium left>
-                                                fa-clock-o
-                                            </v-icon>
-                                            {{ cyc }}
-                                        </v-btn>
-                                        <v-spacer></v-spacer>
-                                        <v-btn @click.stop="renderInit">
-                                            <v-icon>
-                                                refresh
-                                            </v-icon>
-                                        </v-btn>
-                                        <v-btn @click.stop="renderPrevious">
-                                            <v-icon>fa-backward</v-icon>
-                                        </v-btn>
-                                        <v-btn @click.stop="changeStatus">
-                                            <v-icon v-if="stopped">
-                                                fa-play
-                                            </v-icon>
-                                            <v-icon v-if="!stopped">
-                                                fa-pause
-                                            </v-icon>
-                                        </v-btn>
-                                        <v-btn @click.stop="renderNext">
-                                            <v-icon>fa-forward</v-icon>
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
+                                <m-writeback v-bind="cur.W"></m-writeback>
+                                <m-memory v-bind="cur.M"></m-memory>
+                                <m-execute v-bind="cur.E"></m-execute>
+                                <m-decode v-bind="cur.D"></m-decode>
+                                <m-fetch v-bind="cur.F"></m-fetch>
+                                <v-card-actions>
+                                    <v-btn :cyc="cyc">
+                                        <v-icon medium left>
+                                            fa-clock-o
+                                        </v-icon>
+                                        {{ cyc }}
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn @click.stop="renderInit">
+                                        <v-icon>
+                                            refresh
+                                        </v-icon>
+                                    </v-btn>
+                                    <v-btn @click.stop="renderPrevious">
+                                        <v-icon>fa-backward</v-icon>
+                                    </v-btn>
+                                    <v-btn @click.stop="changeStatus">
+                                        <v-icon v-if="stopped">
+                                            fa-play
+                                        </v-icon>
+                                        <v-icon v-if="!stopped">
+                                            fa-pause
+                                        </v-icon>
+                                    </v-btn>
+                                    <v-btn @click.stop="renderNext">
+                                        <v-icon>fa-forward</v-icon>
+                                    </v-btn>
+                                </v-card-actions>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -313,103 +367,119 @@
     </template>
 
     <template id="template-m-fetch">
-        <v-layout row wrap class="elevation-4">
+        <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-card :title="ins.addr" :value="ins.code"></m-card>
+                <m-stage :ins="ins" name="F"></m-stage>
             </v-flex>
             <v-flex xs2 offset-xs2 class="elevation-5 my-2">
-                <m-card title="predPC" :value="predPC"></m-card>
+                <m-card title="predPC" :value="predPC" :bubble="bubble" :stall="stall"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-decode">
-        <v-layout row wrap class="elevation-4">
+        <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-card :title="ins.addr" :value="ins.code"></m-card>
+                <m-stage :ins="ins" name="D" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="rA" :value="rA"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="rB" :value="rB"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2   mx-1">
                 <m-card title="valC" :value="valC"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2   mx-1">
                 <m-card title="valP" :value="valP"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-execute">
-        <v-layout row wrap class="elevation-4">
+        <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-card :title="ins.addr" :value="ins.code"></m-card>
+                <m-stage :ins="ins" name="E" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2  px-1  mx-1">
                 <m-card title="valC" :value="valC"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2  mx-1">
                 <m-card title="valA" :value="valA"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2  mx-1">
                 <m-card title="valB" :value="valB"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2  mx-1">
                 <m-card title="dstE" :value="dstE"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2  mx-1">
                 <m-card title="dstM" :value="dstM"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2  mx-1">
                 <m-card title="srcA" :value="srcA"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2  mx-1">
                 <m-card title="srcA" :value="srcA"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-memory">
-        <v-layout row wrap class="elevation-4">
+        <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-card :title="ins.addr" :value="ins.code"></m-card>
+                <m-stage :ins="ins" name="M" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="Cnd" :value="Cnd"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2   mx-1">
                 <m-card title="valE" :value="valE"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2   mx-1">
                 <m-card title="valA" :value="valA"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="dstE" :value="dstE"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="dstM" :value="dstM"></m-card>
             </v-flex>
         </v-layout>
     </template>
     <template id="template-m-writeback">
-        <v-layout row wrap class="elevation-4">
+        <v-layout row wrap>
             <v-flex xs2 offset-xs0 class="my-2">
-                <m-card :title="ins.addr" :value="ins.code"></m-card>
+                <m-stage :ins="ins" name="W" :bubble="bubble" :stall="stall"></m-stage>
             </v-flex>
-            <v-flex xs1 class=" mx-1"></v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class=" "></v-flex>
+            <v-flex xs2 class="elevation-5 my-2">
                 <m-card title="valE" :value="valE"></m-card>
             </v-flex>
-            <v-flex xs2 class="elevation-5 my-2 mx-1">
+            <v-flex xs2 class="elevation-5 my-2   mx-1">
                 <m-card title="valM" :value="valM"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2   mx-1">
                 <m-card title="dstE" :value="dstE"></m-card>
             </v-flex>
-            <v-flex xs1 class="elevation-5 my-2 mx-1">
+            <v-flex xs1 class="elevation-5 my-2  mx-1 ">
                 <m-card title="dstM" :value="dstM"></m-card>
             </v-flex>
         </v-layout>
+    </template>
+
+    <template id="template-m-stage">
+        <div class="stage-tile" v-bind:class="{bubble: bubble, stall: stall}">
+            <div class="m-stage-title">
+                {{ name }}
+            </div>
+            <div class="m-stage-content">
+                <div class="m-stage-addr">
+                    {{ ins.addr }}
+                </div>
+                <div class="m-stage-code">
+                    {{ ins.code }}
+                </div>
+            </div>
+        </div>
     </template>
 
 
@@ -418,24 +488,28 @@
             props: ['title', 'value'],
             template: '#template-m-card',
         });
+        Vue.component('m-stage', {
+            props: ['name', 'ins', 'bubble', 'stall'],
+            template: '#template-m-stage'
+        });
         Vue.component('m-fetch', {
-            props: ['stat', 'control', 'ins', 'operation', 'predPC'],
+            props: ['stat', 'bubble', 'stall', 'ins', 'operation', 'predPC'],
             template: '#template-m-fetch'
         });
         Vue.component('m-decode', {
-            props: ['stat', 'control', 'ins', 'operation', 'rA', 'rB', 'valC', 'valP'],
+            props: ['stat', 'bubble', 'stall', 'ins', 'operation', 'rA', 'rB', 'valC', 'valP'],
             template: '#template-m-decode'
         });
         Vue.component('m-execute', {
-            props: ['stat', 'control', 'ins', 'operation', 'valC', 'valA', 'valB', 'dstE', 'dstM', 'srcA', 'srcB'],
+            props: ['stat', 'bubble', 'stall', 'ins', 'operation', 'valC', 'valA', 'valB', 'dstE', 'dstM', 'srcA', 'srcB'],
             template: '#template-m-execute'
         });
         Vue.component('m-memory', {
-            props: ['stat', 'control', 'ins', 'operation', 'Cnd', 'valC', 'valE', 'valA', 'dstE', 'dstM'],
+            props: ['stat', 'bubble', 'stall', 'ins', 'operation', 'Cnd', 'valC', 'valE', 'valA', 'dstE', 'dstM'],
             template: '#template-m-memory'
         });
         Vue.component('m-writeback', {
-            props: ['stat', 'control', 'ins', 'operation', 'Cnd', 'valE', 'valM', 'dstE', 'dstM'],
+            props: ['stat', 'bubble', 'stall', 'ins', 'operation', 'Cnd', 'valE', 'valM', 'dstE', 'dstM'],
             template: '#template-m-writeback'
         });
         myVue = new Vue({
@@ -450,7 +524,7 @@
                 dark: true,
                 drawers: ['Permanent', 'Persistent', 'Temporary'],
                 primaryDrawer: {
-                    model: null,
+                    model: true,
                     type: 'persistent',
                     clipped: false,
                     floating: false,
@@ -463,7 +537,7 @@
                 getRegName: function (id) {
                     if (id > 7)
                         return '---';
-                    return {
+                    ret = {
                         0: 'EAX',
                         1: 'ECX',
                         2: 'EDX',
@@ -473,6 +547,8 @@
                         6: 'ESI',
                         7: 'EDI',
                     }[id];
+                    if (ret) return ret;
+                    return '---';
                 },
 
                 handleDragOver: function (evt) {
@@ -496,6 +572,7 @@
                             ).done(function () {
                                 self.uploadAllowed = false;
                                 self.renderInit();
+                                self.primaryDrawer.model = false;
                             });
                         };
                         reader.readAsText(f);
@@ -505,7 +582,7 @@
                     if (val === '---') {
                         return '----------';
                     }
-                    if (val === '----------')
+                    if (val.slice(0, 2) === '--' || val.slice(0, 2) === '0x')
                         return val;
                     return '0x' + val.slice(6, 8) + val.slice(4, 6)
                         + val.slice(2, 4) + val.slice(0, 2);
@@ -516,12 +593,29 @@
                     if (typeof (ins) === "string") {
                         addr = ins.slice(0, 8);
                         code = ins.slice(9, ins.length);
+                        if (!addr || !code)
+                            return { addr: '--------', code: "No Instruction" };
                         return { addr: addr, code: code };
                     } else {
                         return ins;
                     }
                 },
                 renderThis: function () {
+                    // this.cur.F.name = 'F';
+                    // this.cur.D.name = 'D';
+                    // this.cur.E.name = 'E';
+                    // this.cur.M.name = 'M';
+                    // this.cur.W.name = 'W';
+                    // if (this.cur.F.stall || this.cur.F.bubble)
+                    //     alert('233');
+                    //     if (this.cur.D.stall || this.cur.D.bubble)
+                    //     alert('233');
+                    //     if (this.cur.E.stall || this.cur.E.bubble)
+                    //     alert('233');
+                    //     if (this.cur.M.stall || this.cur.M.bubble)
+                    //     alert('233');
+                    //     if (this.cur.W.stall || this.cur.W.bubble)
+                    //     alert('233');
                     this.cur.F.ins = this.renderIns(this.cur.F.ins);
                     this.cur.D.ins = this.renderIns(this.cur.D.ins);
                     this.cur.W.ins = this.renderIns(this.cur.W.ins);
@@ -572,6 +666,7 @@
                 renderInit: function () {
                     console.log("render init");
                     this.cyc = -1;
+                    this.stopped = true;
                     this.renderNext();
                 },
                 runThis: function () {

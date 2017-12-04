@@ -29,15 +29,19 @@ def update(cur, nxt):
 
     if F_stall:
         nxt.F.__dict__.update(**cur.F.__dict__)
+        nxt.F.__dict__.update(**{'stall': True})
     if D_stall:
         nxt.D.__dict__.update(**cur.D.__dict__)
+        nxt.D.__dict__.update(**{'stall': True})
     if W_stall:
         nxt.W.__dict__.update(**cur.W.__dict__)
+        nxt.W.__dict__.update(**{'stall': True})
     if D_bubble:
         nxt.D.__dict__.update(**{
             'stat': SBUB,
             'icode': INOP,
             'ifun': FNONE,
+            'bubble': True
         })
     if E_bubble:
         nxt.E.__dict__.update(**{
@@ -48,6 +52,7 @@ def update(cur, nxt):
             'dstM': RNONE,
             'srcA': RNONE,
             'srcB': RNONE,
+            'bubble': True
         })
     if M_bubble:
         nxt.M.__dict__.update(**{
@@ -56,6 +61,7 @@ def update(cur, nxt):
             'Cnd': False,
             'dstM': RNONE,
             'dstE': RNONE,
+            'bubble': True
         })
     cur.F = nxt.F
     cur.D = nxt.D

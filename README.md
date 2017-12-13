@@ -1,5 +1,13 @@
 Y86 Simulator, for ICS2017 @ Fudan, by ichn-hu
 
+# TODO
+
+* Build with webpack
+
+## References
+
+[Full-stack single page application with Vue.js and Flask](https://codeburst.io/full-stack-single-page-application-with-vue-js-and-flask-b1e036315532)
+
 # Vue-Y86 运行与测试说明
 
 ## 输入数据

@@ -1,9 +1,10 @@
 from flask import Flask, request
-from flask import jsonify
+from flask_cors import CORS
 import json
 import pprint
 from kernel import runner
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../static')
+cors = CORS(app, resourses={r"/*": {"origins": "*"}})
 
 @app.route('/')
 def show():
@@ -18,4 +19,4 @@ def run():
     return dump
 
 if __name__ == "__main__":
-    app.run(port=8080)
+    app.run(port=5000)

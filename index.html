@@ -13,12 +13,12 @@
     <style>
         @font-face {
             font-family: 'modeno';
-            src: url('/static/modeno.ttf');
+            src: url('./static/modeno.ttf');
         }
 
         @font-face {
             font-family: 'Inconsolata';
-            src: url('/static/Inconsolata.otf');
+            src: url('./static/Inconsolata.otf');
         }
 
         html {
@@ -72,8 +72,8 @@
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
-            z-index: -100;
-            background: url('/static/bkgd3.gif') no-repeat;
+            z-index: -1.00;
+            background: url('./static/bkgd3.gif') no-repeat;
             /* background: url('/static/bg2.jpeg') no-repeat; */
             background-position: center;
             background-size: cover;
@@ -96,7 +96,7 @@
             min-height: 100%;
             z-index: -100;
             /* background: url('/static/bkgd.gif') no-repeat; */
-            background: url('/static/bkgd2.gif') no-repeat;
+            background: url('./static/bkgd2.gif') no-repeat;
             background-position: center;
             background-size: cover;
 
@@ -699,7 +699,7 @@
                         var reader = new FileReader();
                         reader.onload = function (e) {
                             // console.log(e.target.result);
-                            $.post('/upload', { 'instrCode': e.target.result },
+                            $.post('http://localhost:5000/upload', { 'instrCode': e.target.result },
                                 function (result) {
                                     //    console.log(result);
                                     self.result = result;

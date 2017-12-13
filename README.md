@@ -4,9 +4,17 @@ Y86 Simulator, for ICS2017 @ Fudan, by ichn-hu
 
 * Build with webpack
 
+if you fail installing chromedriver, use the command line below
+
+```
+npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist/chromedriver
+```
+
 ## References
 
 [Full-stack single page application with Vue.js and Flask](https://codeburst.io/full-stack-single-page-application-with-vue-js-and-flask-b1e036315532)
+
+
 
 # Vue-Y86 运行与测试说明
 

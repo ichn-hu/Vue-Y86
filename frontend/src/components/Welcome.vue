@@ -1,35 +1,26 @@
 <template>
-      <v-app>
-    <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect">
-        <div id="dropBackground">
-        </div>
-        <v-container grid-list-md text-xs-center id="welcomePanel">
-            <v-layout row wrap>
-                <v-flex xs6 offset-xs3>
-                    <v-card>
-                        <v-card-text>
-                            <h1>
-                                The Modern Y86 Simulator
-                            </h1>
-                        </v-card-text>
-                    </v-card>
-                </v-flex>
-            </v-layout>
-        </v-container>
-
-    </div>
-</v-app>
+  <div id="dropZone" @dragover.stop.prevent="handleDragOver" @drop.stop.prevent="handleFileSelect">
+    <div id="dropBackground"/>
+    <v-container grid-list-md text-xs-center id="welcomePanel">
+      <v-layout row wrap>
+        <v-flex xs6 offset-xs3>
+          <v-card>
+            <v-card-text>
+              <h1>The Modern Y86 Simulator</h1>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 <script>
-import Vue from 'vue'
-import Vuetify from 'vuetify'
 import $ from 'jquery'
-Vue.use(Vuetify)
 
 var uploadUrl = 'http://localhost:5000/upload'
 export default {
-  name: 'WelcomePanel',
-  method: {
+  name: 'Welcome',
+  methods: {
     handleDragOver: function (evt) {
       evt.dataTransfer.dropEffect = 'copy' // Explicitly show this is a copy.
     },

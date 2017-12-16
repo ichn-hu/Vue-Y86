@@ -37,7 +37,6 @@ export default {
             { instrCode: e.target.result },
             function (result) {
               //    console.log(result)
-              self.result = result
               window.result = result
             },
             'json'
@@ -45,9 +44,6 @@ export default {
             self.$router.push({
               path: '/result'
             })
-            self.uploadAllowed = false
-            self.renderInit()
-            self.primaryDrawer.model = false
           })
         }
         reader.readAsText(f)
@@ -80,4 +76,35 @@ a {
   position: fixed;
   top: 500px;
 }
+h1 {
+  position: relative;
+  top: 10px;
+  text-align: center;
+  font-size: 50px;
+  font-family: 'modeno'
+}
+#dropBackground {
+  display: block;
+  height: 99%;
+  width: 99%;
+  z-index: -1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1.00;
+  background: url('/static/bkgd3.gif') no-repeat;
+  /* background: url('/static/bg2.jpeg') no-repeat; */
+  background-position: center;
+  background-size: cover;
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
+}
+
+
+
 </style>

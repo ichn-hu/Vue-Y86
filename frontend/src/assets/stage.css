@@ -1,0 +1,16 @@
+.m-operation {
+  font-family: modeno;
+  font-size: 17px;
+}
+.bubble {
+  background: rgba(29, 2, 2, 0.35);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  -webkit-transition: background-color 0.5s;
+  transition: background-color 0.5s;
+}
+.stall {
+  background: rgba(243, 253, 95, 0.767);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  -webkit-transition: background-color 1s box-shadow 1s;
+  transition: background-color 1s box-shadow 1s;
+}

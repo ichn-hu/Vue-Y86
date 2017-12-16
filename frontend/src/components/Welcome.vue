@@ -42,6 +42,9 @@ export default {
             },
             'json'
           ).done(function () {
+            self.$router.push({
+              path: '/result'
+            })
             self.uploadAllowed = false
             self.renderInit()
             self.primaryDrawer.model = false
@@ -72,5 +75,9 @@ export default {
     height: 100%;
     background-size: cover;
     z-index: 100;
+}
+a {
+  position: fixed;
+  top: 500px;
 }
 </style>

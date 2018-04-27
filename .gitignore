@@ -2,7 +2,7 @@
 node_modules/
 __pycache__/
 .vscode/
-.idea
+.idea/
 dist/
 npm-debug.log
 yarn-error.log

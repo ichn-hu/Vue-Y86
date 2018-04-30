@@ -2,7 +2,7 @@ from kernel.const import *
 from kernel.misc import toInteger, swichEndian
 
 
-def memory(cur, nxt, mem):
+def memory(cur, nxt, mem, over):
     op = []
 
     if cur.M.icode in [IRMMOVL, IPUSHL, ICALL, IMRMOVL]:
@@ -45,3 +45,4 @@ def memory(cur, nxt, mem):
         'dstE': cur.M.dstE,
         'dstM': cur.M.dstM,
     })
+    over.append('memory')

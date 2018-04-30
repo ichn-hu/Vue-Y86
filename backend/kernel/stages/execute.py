@@ -130,7 +130,7 @@ def aluXor(a, b, c, cc):
     return swichEndian(val)
 
 
-def execute(cur, nxt, cc):
+def execute(cur, nxt, cc, over):
     op = []
 
     need_calc = cur.E.icode in [IOPL, IPOPL, IPUSHL, ICALL, IRMMOVL, IMRMOVL]
@@ -215,7 +215,7 @@ def execute(cur, nxt, cc):
         'dstM': cur.E.dstM,
         'dstE': RNONE if cur.E.icode in [IRRMOVL] and not Cnd else cur.E.dstE,
     })
-
+    over.append("execute")
 
 if __name__ == "__main__":
     class cc:

@@ -2,7 +2,7 @@ from kernel.const import *
 from kernel.misc import swichEndian, split2chunks
 
 
-def decode(cur, nxt, reg):
+def decode(cur, nxt, reg, over):
     op = []
 
     srcA = RNONE
@@ -109,3 +109,4 @@ def decode(cur, nxt, reg):
         'srcA': srcA,
         'srcB': srcB
     })
+    over.append('decode')

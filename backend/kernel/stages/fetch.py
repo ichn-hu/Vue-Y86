@@ -2,7 +2,7 @@ from kernel.const import *
 from kernel.misc import swichEndian, split2chunks, toInteger, int16, disassemble
 import sys
 
-def fetch(cur, nxt, mem):
+def fetch(cur, nxt, mem, over):
     op = []
     if cur.M.icode in [IJXX] and not cur.M.Cnd:
         pc = cur.M.valA
@@ -92,3 +92,4 @@ def fetch(cur, nxt, mem):
         'predPC': predPC
     })
     #sys.exit(str(nxt.F.predPC))
+    over.append("fetch")

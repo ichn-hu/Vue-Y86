@@ -130,7 +130,7 @@ def aluXor(a, b, c, cc):
     return swichEndian(val)
 
 
-def execute(cur, nxt, cc):
+def execute(cur, nxt, cc, M_over, E_over, logging):
     
     op = []
 
@@ -160,6 +160,9 @@ def execute(cur, nxt, cc):
     else:
         aluFun = AADD
 
+    logging.debug("Wait for M")
+    M_over.wait()
+    logging.debug("E knows M is over")
     set_cc = True if cur.E.icode in [IOPL] and \
         nxt.W.stat not in [SADR, SINS, SHLT] and \
         cur.W.stat not in [SADR, SINS, SHLT] else False
@@ -216,6 +219,8 @@ def execute(cur, nxt, cc):
         'dstM': cur.E.dstM,
         'dstE': RNONE if cur.E.icode in [IRRMOVL] and not Cnd else cur.E.dstE,
     })
+    E_over.set()
+    logging.debug("E is over")
 
 if __name__ == "__main__":
     class cc:

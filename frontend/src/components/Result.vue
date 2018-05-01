@@ -188,8 +188,8 @@
         drawers: ['Permanent', 'Persistent', 'Temporary'],
         primaryDrawer: {
           model: true,
-          type: 'persistent',
-          clipped: false,
+          type: 'permanent',
+          clipped: true,
           floating: false,
           mini: false
         },

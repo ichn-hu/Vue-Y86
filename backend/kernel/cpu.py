@@ -42,6 +42,7 @@ def run():
     ss = Stat()
     while ss.stat in [SAOK] and clock < MAXCLOCK:
         nxt = PipeReg()
+        over = []
         writeback(cur, nxt, reg, ss)
         memory(cur, nxt, mem)
         execute(cur, nxt, cc)

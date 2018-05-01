@@ -2,7 +2,7 @@ from kernel.const import *
 from kernel.misc import swichEndian, split2chunks
 
 
-def decode(cur, nxt, reg):
+def decode(cur, nxt, reg, E_over, D_over, logging):
     op = []
 
     srcA = RNONE
@@ -30,6 +30,9 @@ def decode(cur, nxt, reg):
     forward = False
 
     valid_valA = False
+
+    logging.debug("Waiting for signal nxt.M.dstE")
+    E_over.wait()
 
     if cur.D.icode in [ICALL, IJXX]:
         valA = cur.D.valP
@@ -63,12 +66,12 @@ def decode(cur, nxt, reg):
 
     if forward and srcA != RNONE:
         op.append('Forward {0} to {1}'.format(swichEndian(valA), regName[srcA]))
-        
+
     forward = False
 
     if srcB in [nxt.M.dstE]:
         forward = True
-        valB = nxt.M.valE # forward, 
+        valB = nxt.M.valE # forward,
     elif srcB in [cur.M.dstM]:
         forward = True
         valB = nxt.W.valM
@@ -83,7 +86,7 @@ def decode(cur, nxt, reg):
         valB = cur.W.valE
     elif srcB != RNONE:
         op.append('Load {0} to {1} from register file'.format(swichEndian(valB), regName[srcB]))
-    
+
     if forward and srcB != RNONE:
         op.append('Forward {0} to {1}'.format(swichEndian(valB), regName[srcB]))
 
@@ -109,3 +112,5 @@ def decode(cur, nxt, reg):
         'srcA': srcA,
         'srcB': srcB
     })
+    D_over.set()
+    logging.debug("D is over")

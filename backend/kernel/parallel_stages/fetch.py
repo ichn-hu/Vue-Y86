@@ -2,7 +2,7 @@ from kernel.const import *
 from kernel.misc import swichEndian, split2chunks, toInteger, int16, disassemble
 import sys
 
-def fetch(cur, nxt, mem):
+def fetch(cur, nxt, mem, D_over, F_over, logging):
     op = []
     if cur.M.icode in [IJXX] and not cur.M.Cnd:
         pc = cur.M.valA
@@ -78,6 +78,8 @@ def fetch(cur, nxt, mem):
         'ins': ins,
         'operation': op
     })
+    logging.debug("Waiting for D")
+    D_over.wait()
     nxt.D.__dict__.update(**{
         'icode': icode,
         'ifun': ifun,
@@ -92,3 +94,5 @@ def fetch(cur, nxt, mem):
         'predPC': predPC
     })
     #sys.exit(str(nxt.F.predPC))
+    F_over.set()
+    logging.debug("F is over")

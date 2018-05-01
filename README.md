@@ -25,7 +25,7 @@ Y86 Simulator, for ICS2017 @ Fudan University, by ichn-hu
 
 <del>To be recorded.</del>
 
-Now available at [[bilibili]](2233)
+Now available at [[bilibili]](https://www.bilibili.com/video/av22848850/).
 
 ## Parallel Execution
 

@@ -2,6 +2,12 @@
 
 Y86 Simulator, for ICS2017 @ Fudan University, by ichn-hu
 
+## Animated Illustration
+
+<del>To be recorded.</del>
+
+Now available at [[bilibili]](https://www.bilibili.com/video/av22848850/).
+
 ## How to play
 
 * The vue-built frontend is now available at [the github page](http://ichn-hu.github.io/Vue-Y86). For visual effects, this frontend interface was designed with love and several large static files, so please make sure the web page is fully loaded for further operation. Once the page is fully loaded, the browse will cache these large file, and the pain of loading it will disappear! The change of the font of the title is a signal of fully loaded. Take your time~😋
@@ -21,11 +27,7 @@ Y86 Simulator, for ICS2017 @ Fudan University, by ichn-hu
 
   ​
 
-## Animated Illustration
 
-<del>To be recorded.</del>
-
-Now available at [[bilibili]](https://www.bilibili.com/video/av22848850/).
 
 ## Parallel Execution
 

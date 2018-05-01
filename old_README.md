@@ -1,20 +1,18 @@
 Y86 Simulator, for ICS2017 @ Fudan, by ichn-hu
 
+# TODO
 
+* Build with webpack
 
-# How to play
+if you fail installing chromedriver, use the command line below
 
-* The vue-built frontend is now available at [the github page](http://ichn-hu.github.io/Vue-Y86). For visual effects, this frontend interface was designed with love and several large static files, so please make sure the web page is fully loaded for further operation. The change of the font of the title is a signal of fully loaded. Take your time~😋
+```
+npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist/chromedriver
+```
 
-* Then you can checkout the `backend` branch and down load it to your local environment, because the frontend is already available, for the sake of your disk space and time you don't have to download and rebuild it (which requires node.js environment). ✨
+## References
 
-  <img src="README.assets/1525161198611.png" style="zoom:50%">
-
-
-* The backend is written in python3, and the only dependent is the flask package. Make sure your python is compatible with the requirement. 😀 In the root directory, run `python server.py` then you will have the backend available at `localhost:5000`. The web front will interact with the backend through it, more precisely, post the uploaded `.yo` Y86 binary file to the backend, and wait for the response containing all the inner states during executing the instructions, and then rendering it.
-* Now let's play. In the `test` director, there are a bunch of `.yo` files that can be tested. Drag and drop one of then into the github page web front, the backend will output the inner threading details to the terminal you run it. Once the execution is done, the front page will change to the display model for you to check and play with.
-
-
+[Full-stack single page application with Vue.js and Flask](https://codeburst.io/full-stack-single-page-application-with-vue-js-and-flask-b1e036315532)
 
 
 
